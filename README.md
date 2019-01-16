@@ -191,6 +191,6 @@ So, for now, it's required to specify the whole path to the rule, instead of jus
 
 ## Rule File Names
 
-Dashes in the file names are converted to camel case, but leading and trailing dashes are keeped. "Rule" is appeneded
+Dashes in the file names are converted to camel-case, but leading and trailing dashes are keeped. "Rule" is appended.
 
 So, the rule name `-ab-cd-ef-` is located in the file `-abCdEf-Rule`.
