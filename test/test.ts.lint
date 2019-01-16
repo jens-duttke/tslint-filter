@@ -1,0 +1,38 @@
+import SomeModule from './some-module';
+import AnotherModule from './some-module';
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [Misnamed import. Import should be named 'someModule' but found 'AnotherModule']
+
+interface I18N {}
+
+interface IInterface {}
+          ~~~~~~~~~~ [Interface name "IInterface" must not have an "I" prefix]
+
+class Test {
+	private readonly a;
+
+	helloWorld (a, b, c) {
+	~~~~~~~~~~ [The class method 'helloWorld' must be marked either 'private', 'public', or 'protected']
+
+		let a: boolean;
+
+		if (SomeModule) {
+		~~ [Use a conditional expression instead of assigning to 'a' in multiple places. (save about 36 characters, conditional expression size would be about 29 characters)]
+			a = true;
+		}
+		else {
+			a = false;
+		}
+
+		let longText;
+		    ~~~~~~~~ [expected variable-declaration: 'longText' to have a typedef]
+
+		if (!AnotherModule) {
+			longText = 'Some long text to get an expression which is longer than 120 characters, so that it doesn\'t fit into one line.';
+		}
+		else {
+			longText = 'This expresson should not be converted into an conditional expression one-liner.';
+		}
+	}
+
+	render (): void {}
+}

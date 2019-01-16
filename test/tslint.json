@@ -1,0 +1,25 @@
+{
+	"rulesDirectory": [
+		"rules",
+		"tslint-microsoft-contrib"
+	],
+	"rules": {
+		"___import-name": [true, [
+			"'someModule' .+ 'SomeModule'"
+		]],
+		"___interface-name": [true, "never-prefix", [
+			"Interface name \"I[\\d]"
+		]],
+		"___member-access": [true, [
+			"'(getDerivedStateFromProps|componentDidMount|shouldComponentUpdate|render|getSnapshotBeforeUpdate|componentDidUpdate|componentWillUnmount)'"
+		]],
+		"___prefer-conditional-expression": [true, "check-else-if", [
+			"conditional expression size would be about [120...]"
+		]],
+		"___typedef": [true, "call-signature", "arrow-call-signature", "parameter", "property-declaration", "variable-declaration", "member-variable-declaration", [
+			"\\bmember-variable-declaration: 'a'",
+			"\\bcall-signature: 'helloWorld'",
+			"\\bparameter: '(a|b|c)'"
+		]]
+	}
+}

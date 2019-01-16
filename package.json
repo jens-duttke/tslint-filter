@@ -1,0 +1,51 @@
+{
+	"name": "tslint-filter",
+	"version": "1.0.0",
+	"description": "Suppress and modify TSLint warnings, before they get returned to the console or your code editor",
+	"author": "Jens Duttke <github@duttke.de>",
+	"keywords": [
+		"TSLint",
+		"warnings",
+		"errors",
+		"filter",
+		"suppress",
+		"hide",
+		"ignore",
+		"modify",
+		"manipulate",
+		"rules",
+		"rule",
+		"proxy"
+	],
+	"main": "./dist/index.js",
+	"typings": "./dist/index.d.ts",
+	"license": "MIT",
+	"scripts": {
+		"start": "tsc -w",
+		"build": "npm run clean && tsc",
+		"clean": "rimraf dist",
+		"lint": "tslint --project tsconfig.json --format stylish",
+		"test": "tslint --test test"
+	},
+	"dependencies": {
+		"to-regex-range": "^4.0.2"
+	},
+	"devDependencies": {
+		"@types/node": "^10.12.18",
+		"rimraf": "^2.6.3",
+		"tslint": "^5.12.1",
+		"tslint-microsoft-contrib": "^6.0.0",
+		"typescript": "^3.2.2"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/jens-duttke/tslint-filter.git"
+	},
+	"bugs": {
+		"url": "https://github.com/jens-duttke/tslint-filter/issues"
+	},
+	"engines": {
+		"node": ">=6.0.0"
+	},
+	"engineStrict": true
+}
