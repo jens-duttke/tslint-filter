@@ -96,7 +96,7 @@ module.exports = require('tslint-filter')('tslint/lib/rules/interfaceNameRule', 
 });
 ```
 
-Now you can ignore interface names, starting with "I" followed by an digit:
+Now you can ignore interface names, starting with "I" followed by a digit:
 ```json
 "___interface-name": [true, "never-prefix", [
 	"Interface name \"I[\\d]"
