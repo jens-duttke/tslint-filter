@@ -4,7 +4,7 @@
 		"target": "es6",
 		"module": "commonjs",
 		"allowSyntheticDefaultImports": false,
-		"declaration": true,
+		"declaration": false,
 		"noEmit": false,
 		"noEmitOnError": false,
 		"removeComments": true,
