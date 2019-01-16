@@ -23,6 +23,7 @@
 	"scripts": {
 		"start": "tsc -w",
 		"build": "npm run clean && tsc",
+		"prepack": "npm run lint && npm run build && npm run test",
 		"clean": "rimraf dist",
 		"lint": "tslint --project tsconfig.json --format stylish",
 		"test": "tslint --test test"
