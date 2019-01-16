@@ -4,6 +4,17 @@
 # TSLint-Filter
 Suppress and modify TSLint warnings, before they get returned to the console or your code editor.
 
+**Table of Contents** 
+
+- [Use Cases](#use-cases)
+- [Installation](#installation)
+- [Basic Usage](#basic-usage)
+- [Extended Usage](#extended-usage)
+- [Location of Rule Directories](#location-of-rule-directories)
+- [Rule File Names](#rule-file-names)
+
+## Use Cases
+
 Many TSLint rules are very limited by their configurability, and some rules looks like they are not thought to the end.
 
 For example, I want to prevent the usage of "I" as prefix for interface names. The TSLint rule for that is called "interface-name".  
@@ -17,14 +28,6 @@ Why isn't there a way to show the warning only, if the conditional expression wo
 Using TSLint Filter, you have to possibility to easily extend existing rules and suppress specific warnings, based on regular expressions.
 
 It's even possible to use integer ranges in these regular expression, to filter by a range of numbers in the error message.
-
-**Table of Contents** 
-
-- [Installation](#installation)
-- [Basic Usage](#basic-usage)
-- [Extended usage](#extended-usage)
-- [Location of rule directories](#location-of-rule-directories)
-- [Rule file names](#rule-file-names)
 
 ## Installation
 
@@ -71,7 +74,7 @@ The last parameter **must** be always an array with regular expressions. Warning
 ]],
 ```
 
-## Extended usage
+## Extended Usage
 
 Beside simply ignoring warnings, you can also manipulate them. You can change the message, implement a fix or whatever you like.
 
@@ -155,7 +158,7 @@ Ranges can be specified with:
 `-999999999999999` and `999999999999999` are required, because the expression is converted into a valid RegExp, and here we always need to specify a range.  
 These numbers are choosen because they are very near to Number.MIN_SAFE_INTEGER and Number.MAX_SAFE_INTEGER, but the RegExp representation is still very short.
 
-## Location of rule directories
+## Location of Rule Directories
 
 > It's an open to-do to determine the directory and rule file name automatically, based on the `rulesDirectory`, but I havn't found an easy way to do that yet.
 
@@ -186,7 +189,7 @@ So, for now, it's required to specify the whole path to the rule, instead of jus
 
 \* as of 2019-01-16. List ordered by number of rules.
 
-## Rule file names
+## Rule File Names
 
 Dashes in the file names are converted to camel case, but leading and trailing dashes are keeped. "Rule" is appeneded
 
