@@ -1,6 +1,8 @@
 !dist/
+src/
+test/
 *.log
 npm-debug.log*
+.editorconfig
 tsconfig.json
 tslint.json
-test
