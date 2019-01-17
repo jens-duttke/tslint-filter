@@ -21,8 +21,11 @@
 	"license": "MIT",
 	"scripts": {
 		"start": "tsc -w",
-		"build": "npm run clean && tsc",
+		"publish:major": "npm version major && npm publish",
+		"publish:minor": "npm version minor && npm publish",
+		"publish:patch": "npm version patch && npm publish",
 		"prepack": "npm run lint && npm run build && npm run test",
+		"build": "npm run clean && tsc",
 		"clean": "rimraf dist",
 		"lint": "tslint --project tsconfig.json --format stylish",
 		"test": "tslint --test test"
