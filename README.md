@@ -1,12 +1,18 @@
 [![npm version](https://badge.fury.io/js/tslint-filter.svg)](https://badge.fury.io/js/tslint-filter)
+[![Dependency Status](https://img.shields.io/david/jens-duttke/tslint-filter.svg)](https://www.npmjs.com/package/tslint-filter)
 [![Known Vulnerabilities](https://snyk.io/test/github/jens-duttke/tslint-filter/badge.svg?targetFile=package.json)](https://snyk.io/test/github/jens-duttke/tslint-filter?targetFile=package.json)
+[![npm](https://img.shields.io/npm/dm/tslint-filter.svg?maxAge=2592000)](https://www.npmjs.com/package/tslint-filter)
+[![MIT license](https://img.shields.io/github/license/jens-duttke/tslint-filter.svg?style=flat)](https://opensource.org/licenses/MIT)
 
 # TSLint-Filter
 Suppress and modify TSLint warnings, before they get returned to the console or your code editor.
 
-**Table of Contents** 
+**Table of Contents**
 
 - [Use Cases](#use-cases)
+  - [Ignore rules](#ignore-rules)
+  - [Extend rules](#extend-rules)
+  - [Handle JavaScript errors in rules](#handle-javascript-errors-in-rules)
 - [Installation](#installation)
 - [Basic Usage](#basic-usage)
 - [Extended Usage](#extended-usage)
@@ -17,17 +23,35 @@ Suppress and modify TSLint warnings, before they get returned to the console or 
 
 Many TSLint rules are very limited by their configurability, and some rules looks like they are not thought to the end.
 
-For example, I want to prevent the usage of "I" as prefix for interface names. The TSLint rule for that is called "interface-name".  
+### Ignore rules
+
+For example, I want to prevent the usage of "I" as prefix for interface names. The TSLint rule for that is called "interface-name".
 Unfortunately, this rule also shows an error for "I18N", which is an absolutely valid interface name for me.
 
-Or, in my React projects I want to get a warning, if I forgot to specify a Components class method as `private` or `public` using the "member-access" rule. But for the React methods `componentDidMount`, `render`, `componentDidUpdate` etc. I don't want to specify that, because they are always public.  
+Or, in my React projects I want to get a warning, if I forgot to specify a Components class method as `private` or `public` using the "member-access" rule. But for the React methods `componentDidMount`, `render`, `componentDidUpdate` etc. I don't want to specify that, because they are always public.
 Unfortunately, by now, it's not possible to specify a whitelist here.
 
-Or, I want to prefer conditional expressions for small, simple alignments, but "prefer-conditional-expression" also complains about complex statements, which wouldn't be easy readable in a single line, because this line would have a size of 300 characters or more.  
-Why isn't there a way to show the warning only, if the conditional expression would be a ...let's say... less-than-120-chars-one-liner?  
+### Extend rules
+
+I want to prefer conditional expressions for small, simple alignments, but "prefer-conditional-expression" also complains about complex statements, which wouldn't be easy readable in a single line, because this line would have a size of 300 characters or more.
+Why isn't there a way to show the warning only, if the conditional expression would be a ...let's say... less-than-120-chars-one-liner?
 Using TSLint Filter, you have to possibility to easily extend existing rules and suppress specific warnings, based on regular expressions.
 
 It's even possible to use integer ranges in these regular expression, to filter by a range of numbers in the error message.
+
+### Handle JavaScript errors in rules
+
+At this time (2019-01-17), the [tslint-microsoft-contrib](https://www.npmjs.com/package/tslint-microsoft-contrib) rule "import-name" throws an error for empty imports (imports of modules for side efffects only) like
+```javascript
+import './polyfill'
+```
+While TSLint doesn't handle such errors, your IDE may suppress this error silently and may stop linting your whole project or atleast the current file, so that you think your files are free of issues, because your IDE doesn't show any.
+
+TSLint-Filter catches such errors and show them as normal linter warning for the first character of a file, so that you get visual feedback, that there's something wrong.
+
+Using the filter ability of TSLint-Filter you are then also able to suppress the specific error, without to affect the execution of other rules.
+
+> Don't forget to report errors to rule authors, so that they are able to fix them!
 
 ## Installation
 
@@ -56,21 +80,18 @@ You can name the file to whatever you want, but it must end with "Rule.js". I pr
 In your `tslint.json` add the folder to the "rulesDirectory" section:
 ```json
 {
-	"rulesDirectory": [
-		"script/custom-tslint-rules"
-	],
-	"rules": {
-		...
-	}
-}
+  "rulesDirectory": [
+    "script/custom-tslint-rules"
+  ],
+  "rules": {
 ```
 
-Now, instead of using the rule "member-access", I'm able to use the rule "___member-access".  
+Now, instead of using the rule "member-access", I'm able to use the rule "___member-access".
 The last parameter **must** be always an array with regular expressions. Warnings which match these expressions will be ignored.
 
 ```json
 "___member-access": [true, [
-	"'(getDerivedStateFromProps|componentDidMount|shouldComponentUpdate|render|getSnapshotBeforeUpdate|componentDidUpdate|componentWillUnmount)'"
+  "'(getDerivedStateFromProps|componentDidMount|shouldComponentUpdate|render|getSnapshotBeforeUpdate|componentDidUpdate|componentWillUnmount)'"
 ]],
 ```
 
@@ -78,28 +99,28 @@ The last parameter **must** be always an array with regular expressions. Warning
 
 Beside simply ignoring warnings, you can also manipulate them. You can change the message, implement a fix or whatever you like.
 
-For example, we want to extend the "interface-name" rule, to allow the interface name "I18N", even if it starts with "I".  
+For example, we want to extend the "interface-name" rule, to allow the interface name "I18N", even if it starts with "I".
 Unfortunately, the message of this rule does not provide the name of the interface, so first, we have to include the name into the message:
 ```javascript
 const Utils = require('tsutils');
 
 module.exports = require('tslint-filter')('tslint/lib/rules/interfaceNameRule', {
-	modifyFailure (failure) {
-		const node = Utils.getTokenAtPosition(failure.sourceFile, failure.getStartPosition().getPosition());
+  modifyFailure (failure) {
+    const node = Utils.getTokenAtPosition(failure.sourceFile, failure.getStartPosition().getPosition());
 
-		if (node.escapedText) {
-			failure.failure = `Interface name "${node.escapedText}" must not have an "I" prefix`;
-		}
+    if (node.escapedText) {
+      failure.failure = `Interface name "${node.escapedText}" must not have an "I" prefix`;
+    }
 
-		return failure;
-	}
+    return failure;
+  }
 });
 ```
 
 Now you can ignore interface names, starting with "I" followed by a digit:
 ```json
 "___interface-name": [true, "never-prefix", [
-	"Interface name \"I[\\d]"
+  "Interface name \"I[\\d]"
 ]],
 ```
 
@@ -110,32 +131,32 @@ For example the "prefer-conditional-expression" rule could be extended to show t
 const Utils = require('tsutils');
 
 module.exports = require('tslint-filter')('tslint/lib/rules/preferConditionalExpressionRule', {
-	modifyFailure (failure) {
-		const match = failure.getFailure().match(/'([^\0]+)'/);
+  modifyFailure (failure) {
+    const match = failure.getFailure().match(/'([^\0]+)'/);
 
-		if (match !== null) {
-			const node = Utils.getTokenAtPosition(failure.sourceFile, failure.getStartPosition().getPosition());
-			const parent = node.parent;
+    if (match !== null) {
+      const node = Utils.getTokenAtPosition(failure.sourceFile, failure.getStartPosition().getPosition());
+      const parent = node.parent;
 
-			const originalSize = (parent.end - parent.pos);
+      const originalSize = (parent.end - parent.pos);
 
-			const assigneeLength = match[1].length;
-			const expressionLength = parent.expression.end - parent.expression.pos;
-			const thenStatementLength = parent.thenStatement.getText().replace(/^{?[\s\n]+|[\s\n]+}?$/g, '').length;
-			const elseStatementLength = parent.elseStatement.getText().replace(/^{?[\s\n]+|[\s\n]+}?$/g, '').length;
+      const assigneeLength = match[1].length;
+      const expressionLength = parent.expression.end - parent.expression.pos;
+      const thenStatementLength = parent.thenStatement.getText().replace(/^{?[\s\n]+|[\s\n]+}?$/g, '').length;
+      const elseStatementLength = parent.elseStatement.getText().replace(/^{?[\s\n]+|[\s\n]+}?$/g, '').length;
 
-			// That's only an approximated size, depending on the wrapping characters
-			newLength = expressionLength + thenStatementLength + elseStatementLength - assigneeLength + 1;
+      // That's only an approximated size, depending on the wrapping characters
+      newLength = expressionLength + thenStatementLength + elseStatementLength - assigneeLength + 1;
 
-			if (newLength > originalSize) {
-				return;
-			}
+      if (newLength > originalSize) {
+        return;
+      }
 
-			failure.failure = `${failure.failure} (save about ${originalSize - newLength} characters, conditional expression size would be about ${newLength} characters)`
-		}
+      failure.failure = `${failure.failure} (save about ${originalSize - newLength} characters, conditional expression size would be about ${newLength} characters)`
+    }
 
-		return failure;
-	}
+    return failure;
+  }
 });
 ```
 Save this file under the name "___preferConditionalExpressionRule.js" in your custom rule folder.
@@ -143,7 +164,7 @@ Save this file under the name "___preferConditionalExpressionRule.js" in your cu
 Now you can use this pattern, to prevent warnings, where the conditional expression size would be 120 characters or more:
 ```json
 "___prefer-conditional-expression": [true, "check-else-if", [
-	"conditional expression size would be about [120...]"
+  "conditional expression size would be about [120...]"
 ]],
 ```
 
@@ -155,7 +176,7 @@ Ranges can be specified with:
 | `[10...]`  | Any integer number from 10 to 999999999999999
 | `[...]`    | Any integer number from -999999999999999 to 999999999999999, but if possible you should prefer `-?\d+`
 
-`-999999999999999` and `999999999999999` are required, because the expression is converted into a valid RegExp, and here we always need to specify a range.  
+`-999999999999999` and `999999999999999` are required, because the expression is converted into a valid RegExp, and here we always need to specify a range.
 These numbers are choosen because they are very near to Number.MIN_SAFE_INTEGER and Number.MAX_SAFE_INTEGER, but the RegExp representation is still very short.
 
 ## Location of Rule Directories
