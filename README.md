@@ -10,7 +10,7 @@ Suppress and modify TSLint warnings, before they get returned to the console or 
 **Table of Contents**
 
 - [Use Cases](#use-cases)
-  - [Ignore rules](#ignore-rules)
+  - [Ignore specific warnings](#ignore-specific-warnings)
   - [Extend rules](#extend-rules)
   - [Handle JavaScript errors in rules](#handle-javascript-errors-in-rules)
 - [Installation](#installation)
@@ -23,7 +23,7 @@ Suppress and modify TSLint warnings, before they get returned to the console or 
 
 Many TSLint rules are very limited by their configurability, and some rules looks like they are not thought to the end.
 
-### Ignore rules
+### Ignore specific warnings
 
 For example, I want to prevent the usage of "I" as prefix for interface names. The TSLint rule for that is called "interface-name".
 Unfortunately, this rule also shows an error for "I18N", which is an absolutely valid interface name for me.
