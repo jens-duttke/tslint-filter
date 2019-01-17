@@ -25,16 +25,16 @@ Many TSLint rules are very limited by their configurability, and some rules look
 
 ### Ignore specific warnings
 
-For example, I want to prevent the usage of "I" as prefix for interface names. The TSLint rule for that is called "interface-name".
+For example, I want to prevent the usage of "I" as prefix for interface names. The TSLint rule for that is called "interface-name".<br />
 Unfortunately, this rule also shows an error for "I18N", which is an absolutely valid interface name for me.
 
-Or, in my React projects I want to get a warning, if I forgot to specify a Components class method as `private` or `public` using the "member-access" rule. But for the React methods `componentDidMount`, `render`, `componentDidUpdate` etc. I don't want to specify that, because they are always public.
+Or, in my React projects I want to get a warning, if I forgot to specify a Components class method as `private` or `public` using the "member-access" rule. But for the React methods `componentDidMount`, `render`, `componentDidUpdate` etc. I don't want to specify that, because they are always public.<br />
 Unfortunately, by now, it's not possible to specify a whitelist here.
 
 ### Extend rules
 
-I want to prefer conditional expressions for small, simple alignments, but "prefer-conditional-expression" also complains about complex statements, which wouldn't be easy readable in a single line, because this line would have a size of 300 characters or more.
-Why isn't there a way to show the warning only, if the conditional expression would be a ...let's say... less-than-120-chars-one-liner?
+I want to prefer conditional expressions for small, simple alignments, but "prefer-conditional-expression" also complains about complex statements, which wouldn't be easy readable in a single line, because this line would have a size of 300 characters or more.<br />
+Why isn't there a way to show the warning only, if the conditional expression would be a ...let's say... less-than-120-chars-one-liner?<br />
 Using TSLint Filter, you have to possibility to easily extend existing rules and suppress specific warnings, based on regular expressions.
 
 It's even possible to use integer ranges in these regular expression, to filter by a range of numbers in the error message.
@@ -86,7 +86,7 @@ In your `tslint.json` add the folder to the "rulesDirectory" section:
   "rules": {
 ```
 
-Now, instead of using the rule "member-access", I'm able to use the rule "___member-access".
+Now, instead of using the rule "member-access", I'm able to use the rule "___member-access".<br />
 The last parameter **must** be always an array with regular expressions. Warnings which match these expressions will be ignored.
 
 ```json
@@ -99,7 +99,7 @@ The last parameter **must** be always an array with regular expressions. Warning
 
 Beside simply ignoring warnings, you can also manipulate them. You can change the message, implement a fix or whatever you like.
 
-For example, we want to extend the "interface-name" rule, to allow the interface name "I18N", even if it starts with "I".
+For example, we want to extend the "interface-name" rule, to allow the interface name "I18N", even if it starts with "I".<br />
 Unfortunately, the message of this rule does not provide the name of the interface, so first, we have to include the name into the message:
 ```javascript
 const Utils = require('tsutils');
@@ -176,7 +176,7 @@ Ranges can be specified with:
 | `[10...]`  | Any integer number from 10 to 999999999999999
 | `[...]`    | Any integer number from -999999999999999 to 999999999999999, but if possible you should prefer `-?\d+`
 
-`-999999999999999` and `999999999999999` are required, because the expression is converted into a valid RegExp, and here we always need to specify a range.
+`-999999999999999` and `999999999999999` are required, because the expression is converted into a valid RegExp, and here we always need to specify a range.<br />
 These numbers are choosen because they are very near to Number.MIN_SAFE_INTEGER and Number.MAX_SAFE_INTEGER, but the RegExp representation is still very short.
 
 ## Location of Rule Directories
