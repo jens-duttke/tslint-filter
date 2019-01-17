@@ -31,7 +31,7 @@ module.exports = function addFilter (ruleFile: string, options: AddFilterOptions
 		const lastRuleArgument: any = this.ruleArguments[this.ruleArguments.length - 1];
 
 		if (!Array.isArray(lastRuleArgument)) {
-			throw new Error(`No filter configuration given for rule "${ruleName}"`);
+			throw new Error(`No filter configuration given for rule '${ruleName}'`);
 		}
 
 		const ignorePatterns: RegExp[] = lastRuleArgument.map(stringToRegExp);
@@ -41,7 +41,45 @@ module.exports = function addFilter (ruleFile: string, options: AddFilterOptions
 			writable: false
 		});
 
-		let failures: Lint.RuleFailure[] = originalApply.call(this, sourceFile) as Lint.RuleFailure[];
+		let failures: Lint.RuleFailure[];
+
+		try {
+			failures = originalApply.call(this, sourceFile);
+		}
+		catch (error) {
+			let title: string;
+			let message: string;
+
+			if (error instanceof Error) {
+				title = error.name;
+				message = error.message;
+			}
+			else if (typeof error === 'string') {
+				title = 'Error';
+				message = error;
+			}
+			else {
+				title = 'Unhandled error';
+				if (
+					error !== null &&
+					error !== undefined
+				) {
+					message = `Unknown error of type ${(error as { }).constructor.name}`;
+				}
+				else {
+					message = `Unknown error of type '${typeof error as any}'`;
+				}
+			}
+
+			failures = [
+				new Lint.RuleFailure(
+					sourceFile,
+					0, 1,
+					`${title} in '${ruleFile}': ${message}. Rule is disabled for this file`,
+					this.ruleName
+				)
+			];
+		}
 
 		if (typeof options.modifyFailure === 'function') {
 			failures = failures.map(options.modifyFailure).filter(isFailure);
