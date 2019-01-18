@@ -1,6 +1,6 @@
 import SomeModule from './some-module';
 import AnotherModule from './some-module';
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [Misnamed import. Import should be named 'someModule' but found 'AnotherModule']
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [Misnamed import. Import should be named 'someModule' but found 'AnotherModule' for './some-module']
 
 interface I18N {}
 

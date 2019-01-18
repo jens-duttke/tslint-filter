@@ -1,0 +1,40 @@
+{
+	// Controls if the editor should automatically close brackets after opening them
+	"editor.autoClosingBrackets": "never",
+
+	// Insert spaces when pressing Tab. This setting is overriden based on the file contents when `editor.detectIndentation` is on.
+    "editor.insertSpaces": false,
+
+  	// The number of spaces a tab is equal to. This setting is overriden based on the file contents when `editor.detectIndentation` is on.
+	"editor.tabSize": 4,
+
+	// The default end of line character.
+	"files.eol": "\n",
+
+	// Configure glob patterns for excluding files and folders.
+	"files.exclude": {
+		".vscode": false,
+		"node_modules": false,
+	},
+
+	// When enabled, insert a final new line at the end of the file when saving it.
+	"files.insertFinalNewline": true,
+
+	// When enabled, will trim trailing whitespace when saving a file.
+	"files.trimTrailingWhitespace": true,
+
+	// Enable/disable JavaScript validation.
+	"javascript.validate.enable": false,
+
+ 	 // The path to the rules configuration file
+	"tslint.configFile": "tslint.json",
+
+	// Control whether tslint is enabled for JavaScript files or not.
+	"tslint.jsEnable": true,
+
+	// Specifies the icon theme used in the workbench.
+	"workbench.iconTheme": "material-icon-theme",
+
+	// Defines space handling before function argument parentheses.
+	"typescript.format.insertSpaceBeforeFunctionParenthesis": true,
+}
