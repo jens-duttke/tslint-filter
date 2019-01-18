@@ -26,8 +26,7 @@
 		"publish:patch": "npm version patch",
 		"preversion": "npm run lint && npm run build && npm run test",
 		"postversion": "git push && git push --tags && npm publish",
-		"build": "npm run clean && tsc",
-		"clean": "rimraf dist",
+		"build": "rimraf dist && tsc",
 		"lint": "tslint --project tsconfig.json --format stylish",
 		"test": "tslint --test test"
 	},
