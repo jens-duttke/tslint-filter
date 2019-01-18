@@ -1,4 +1,5 @@
-node_modules
-dist
+/node_modules
+/private
+/dist
 .DS_Store
 *.log
