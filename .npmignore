@@ -1,5 +1,6 @@
 !dist/
 .vscode/
+private/
 src/
 test/
 *.log
