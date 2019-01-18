@@ -182,7 +182,7 @@ These numbers are choosen because they are very near to Number.MIN_SAFE_INTEGER 
 ## Predefined rule wrappers
 
 The TSLint-Filter package contains a couple of predefined rule wrappers, which I'm using in my projects.
-You can simply include them in your projects by adding `"tslint-filter/rules"` to the `"rulesDirectory"` section of your `tslint.json`.
+You can simply include them in your projects by adding `"node_modules/tslint-filter/rules"` to the `"rulesDirectory"` section of your `tslint.json`.
 
 | Rule Name | Original Rule Package | Original Rule Name | Description
 |---|---|---|---
