@@ -1,6 +1,6 @@
 const Utils = require('tsutils');
 
-module.exports = require('../../dist')('tslint/lib/rules/preferConditionalExpressionRule', {
+module.exports = require('../dist')('tslint/lib/rules/preferConditionalExpressionRule', {
 	modifyFailure (failure) {
 		const match = failure.getFailure().match(/'([^\0]+)'/);
 
