@@ -16,6 +16,7 @@ Suppress and modify TSLint warnings, before they get returned to the console or 
 - [Installation](#installation)
 - [Basic Usage](#basic-usage)
 - [Extended Usage](#extended-usage)
+- [Predefined rule wrappers](#predefined-rule-wrappers)
 - [Location of Rule Directories](#location-of-rule-directories)
 - [Rule File Names](#rule-file-names)
 
@@ -124,7 +125,6 @@ Now you can ignore interface names, starting with "I" followed by a digit:
 ]],
 ```
 
-
 For example the "prefer-conditional-expression" rule could be extended to show the approximated number of characters you could save, and also the approximated size if you write the statement as conditional expression:
 
 ```javascript
@@ -178,6 +178,19 @@ Ranges can be specified with:
 
 `-999999999999999` and `999999999999999` are required, because the expression is converted into a valid RegExp, and here we always need to specify a range.<br />
 These numbers are choosen because they are very near to Number.MIN_SAFE_INTEGER and Number.MAX_SAFE_INTEGER, but the RegExp representation is still very short.
+
+## Predefined rule wrappers
+
+The TSLint-Filter package contains a couple of predefined rule wrappers, which I'm using in my projects.
+You can simply include them in your projects by adding `"tslint-filter/rules"` to the `"rulesDirectory"` section of your `tslint.json`.
+
+| Rule Name | Original Rule Package | Original Rule Name | Description
+|---|---|---|---
+| ___import-name                   | tslint-microsoft-contrib | import-name                   | Adds the full import path to the message.
+| ___interface-name                | tslint                   | interface-name                | Adds the criticized interface name to the message.
+| ___member-access                 | tslint                   | member-access                 | Nothing special. Just enables the ability to filter specific warnings in the `tslint.json`.
+| ___prefer-conditional-expression | tslint                   | prefer-conditional-expression | Adds an estimation of the saved characters, and the new size to the message.
+| ___typedef                       | tslint                   | typedef                       | Nothing special. Just enables the ability to filter specific warnings in the `tslint.json`.
 
 ## Location of Rule Directories
 

@@ -1,6 +1,6 @@
 {
 	"rulesDirectory": [
-		"rules",
+		"../rules",
 		"tslint-microsoft-contrib"
 	],
 	"rules": {
