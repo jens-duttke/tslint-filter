@@ -1,6 +1,6 @@
 {
+	"extends": ["../dist/index.js"],
 	"rulesDirectory": [
-		"../rules",
 		"tslint-microsoft-contrib"
 	],
 	"rules": {

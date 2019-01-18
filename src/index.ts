@@ -20,7 +20,7 @@ interface AddFilterOptions {
 
 type RuleApply =  (sourceFile: ts.SourceFile) => Lint.RuleFailure[];
 
-module.exports = function addFilter (ruleFile: string, options: AddFilterOptions = { }): Linter {
+function addFilter (ruleFile: string, options: AddFilterOptions = { }): Linter {
 	const linter: Linter = require(ruleFile) as Linter;
 	const ruleName: string = linter.Rule.metadata.ruleName;
 
@@ -91,7 +91,15 @@ module.exports = function addFilter (ruleFile: string, options: AddFilterOptions
 	};
 
 	return linter;
-};
+}
+
+/*
+	Make it possible to include predefined rules by using:
+	"extends": ["tslint-filter"]
+*/
+addFilter.rulesDirectory = '../rules';
+
+module.exports = addFilter;
 
 function stringToRegExp (str: string): RegExp {
 	return new RegExp(
