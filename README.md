@@ -46,7 +46,7 @@ At this time (2019-01-17), the [tslint-microsoft-contrib](https://www.npmjs.com/
 ```javascript
 import './polyfill'
 ```
-While TSLint doesn't handle such errors, your IDE may suppress this error silently and may stop linting your whole project or atleast the current file, so that you think your files are free of issues, because your IDE doesn't show any.
+While TSLint doesn't handle such errors, your code editor may suppress this error silently and may stop linting your whole project or atleast the current file, so that you think your files are free of issues, because your editor doesn't show any.
 
 TSLint-Filter catches such errors and show them as normal linter warning for the first character of a file, so that you get visual feedback, that there's something wrong.
 
