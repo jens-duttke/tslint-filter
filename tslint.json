@@ -93,7 +93,7 @@
 		"linebreak-style": [true, "LF"],
 		"max-classes-per-file": [true, 1],
 		"max-file-line-count": [true, 300],
-		"max-line-length": [true, 120],
+		"max-line-length": [true, 160],
 		"no-duplicate-imports": true,
 		"no-mergeable-namespace": true,
 		"no-require-imports": true,
