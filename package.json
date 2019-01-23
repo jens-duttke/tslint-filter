@@ -20,7 +20,7 @@
 	"main": "./dist/index.js",
 	"license": "MIT",
 	"scripts": {
-		"start": "tsc -w",
+		"start": "rimraf dist && tsc -w",
 		"publish:major": "npm version major",
 		"publish:minor": "npm version minor",
 		"publish:patch": "npm version patch",
