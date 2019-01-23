@@ -14,7 +14,7 @@
 	// Configure glob patterns for excluding files and folders.
 	"files.exclude": {
 		".vscode": false,
-		"node_modules": false,
+		"node_modules": false
 	},
 
 	// When enabled, insert a final new line at the end of the file when saving it.
