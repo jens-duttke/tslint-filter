@@ -19,66 +19,51 @@ interface AddFilterOptions {
 }
 
 type RuleApply =  (sourceFile: ts.SourceFile) => Lint.RuleFailure[];
+type RuleApplyWithProgram =  (sourceFile: ts.SourceFile, program: ts.Program) => Lint.RuleFailure[];
+type RuleApplyAny = RuleApply | RuleApplyWithProgram;
 
 function addFilter (ruleFile: string, options: AddFilterOptions = { }): Linter {
 	const linter: Linter = require(ruleFile) as Linter;
+	const RulePrototype: Lint.IRule | Lint.ITypedRule = linter.Rule.prototype as Lint.IRule | Lint.ITypedRule;
+
+	if (Lint.isTypedRule(RulePrototype)) {
+		RulePrototype.applyWithProgram = applyWithFilter(linter, RulePrototype.applyWithProgram, ruleFile, options);
+	}
+	else {
+		RulePrototype.apply = applyWithFilter(linter, RulePrototype.apply, ruleFile, options);
+	}
+
+	return linter;
+}
+
+/*
+	Makes it possible to include predefined rules by using:
+	"extends": ["tslint-filter"]
+*/
+addFilter.rulesDirectory = '../rules';
+
+module.exports = addFilter;
+
+function applyWithFilter (linter: Linter, originalApplyMethod: RuleApply, ruleFile: string, options: AddFilterOptions): RuleApply;
+function applyWithFilter (linter: Linter, originalApplyMethod: RuleApplyWithProgram, ruleFile: string, options: AddFilterOptions): RuleApplyWithProgram;
+function applyWithFilter (linter: Linter, originalApplyMethod: RuleApplyAny, ruleFile: string, options: AddFilterOptions): RuleApplyAny {
 	const ruleName: string = linter.Rule.metadata.ruleName;
 
-	const RulePrototype: Lint.IRule = linter.Rule.prototype as Lint.IRule;
-	const originalApply: RuleApply = RulePrototype.apply;
-
-	RulePrototype.apply = function apply (this: AbstractRule, sourceFile: ts.SourceFile): Lint.RuleFailure[] {
-		const lastRuleArgument: any = this.ruleArguments[this.ruleArguments.length - 1];
-
-		if (!Array.isArray(lastRuleArgument)) {
-			throw new Error(`No filter configuration given for rule '${ruleName}'`);
-		}
-
-		const ignorePatterns: RegExp[] = lastRuleArgument.map(stringToRegExp);
-
-		Object.defineProperty(this, 'ruleArguments', {
-			value: this.ruleArguments.slice(0, -1),
-			writable: false
-		});
+	return function (this: AbstractRule, sourceFile: ts.SourceFile, program?: ts.Program): Lint.RuleFailure[] {
+		const ignorePatterns: RegExp[] = extractIgnorePatterns(ruleName, this.ruleArguments);
 
 		let failures: Lint.RuleFailure[];
 
 		try {
-			failures = originalApply.call(this, sourceFile);
-		}
-		catch (error) {
-			let title: string;
-			let message: string;
-
-			if (error instanceof Error) {
-				title = error.name;
-				message = error.message;
-			}
-			else if (typeof error === 'string') {
-				title = 'Error';
-				message = error;
+			if (program === undefined) {
+				failures = (originalApplyMethod as RuleApply).call(this, sourceFile);
 			}
 			else {
-				title = 'Unhandled error';
-				if (
-					error !== null &&
-					error !== undefined
-				) {
-					message = `Unknown error of type ${(error as { }).constructor.name}`;
-				}
-				else {
-					message = `Unknown error of type '${typeof error as any}'`;
-				}
+				failures = (originalApplyMethod as RuleApplyWithProgram).call(this, sourceFile, program);
 			}
-
-			failures = [
-				new Lint.RuleFailure(
-					sourceFile,
-					0, 1,
-					`${title} in '${ruleFile}': ${message}. Rule is disabled for this file`,
-					this.ruleName
-				)
-			];
+		}
+		catch (error) {
+			failures = [getFailureByError(error, ruleFile, this.ruleName, sourceFile)];
 		}
 
 		if (typeof options.modifyFailure === 'function') {
@@ -89,17 +74,22 @@ function addFilter (ruleFile: string, options: AddFilterOptions = { }): Linter {
 
 		return failures;
 	};
-
-	return linter;
 }
 
-/*
-	Make it possible to include predefined rules by using:
-	"extends": ["tslint-filter"]
-*/
-addFilter.rulesDirectory = '../rules';
+function extractIgnorePatterns (ruleName: string, ruleArguments: any[]): RegExp[] | never {
+	const lastRuleArgument: any = ruleArguments[ruleArguments.length - 1];
 
-module.exports = addFilter;
+	if (!Array.isArray(lastRuleArgument)) {
+		throw new Error(`No filter configuration given for rule '${ruleName}'`);
+	}
+
+	const ignorePatterns: RegExp[] = lastRuleArgument.map(stringToRegExp);
+
+	// tslint:disable-next-line:no-parameter-reassignment
+	ruleArguments = ruleArguments.slice(0, -1);
+
+	return ignorePatterns;
+}
 
 function stringToRegExp (str: string): RegExp {
 	return new RegExp(
@@ -107,6 +97,34 @@ function stringToRegExp (str: string): RegExp {
 			toRegexRange(p1 !== '' ? p1 : -999999999999999, p2 !== '' ? p2 : 999999999999999, { shorthand: true })
 		)
 	);
+}
+
+function getFailureByError (error: any, ruleFile: string, originalRuleName: string, sourceFile: ts.SourceFile): Lint.RuleFailure {
+	let title: string;
+	let message: string;
+
+	if (error instanceof Error) {
+		title = error.name;
+		message = error.message;
+	}
+	else if (typeof error === 'string') {
+		title = 'Error';
+		message = error;
+	}
+	else {
+		title = 'Unhandled error';
+		if (
+			error !== null &&
+			error !== undefined
+		) {
+			message = `Unknown error of type ${(error as { }).constructor.name}`;
+		}
+		else {
+			message = `Unknown error of type '${typeof error as any}'`;
+		}
+	}
+
+	return new Lint.RuleFailure(sourceFile, 0, 1, `${title} in '${ruleFile}': ${message}. Rule is disabled for this file`, originalRuleName);
 }
 
 function isFailure (failure: Lint.RuleFailure | undefined): failure is Lint.RuleFailure {
