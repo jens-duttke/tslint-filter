@@ -17,6 +17,7 @@ Suppress and modify TSLint warnings, before they get returned to the console or 
 - [Basic Usage](#basic-usage)
 - [Extended Usage](#extended-usage)
 - [Predefined rule wrappers](#predefined-rule-wrappers)
+- [Disable/enable rules by their original name in comment flags in source code](#disableenable-rules-by-their-original-name-in-comment-flags-in-source-code)
 - [Location of Rule Directories](#location-of-rule-directories)
 - [Rule File Names](#rule-file-names)
 
@@ -64,7 +65,7 @@ npm install tslint-filter --save-dev
 
 ## Basic Usage
 
-Since TSLint does not provide an easy way to modify warnings before they get returned, we need to create own rules, with TSLint-Filter as wrapper for the orignal rule.
+Since TSLint does not provide an easy way to modify warnings before they get returned, we need to create own rules, with TSLint-Filter as wrapper for the original rule.
 
 But that's very easy:
 
@@ -194,7 +195,7 @@ You can simply include them in your projects by adding `"extends": ["tslint-filt
 | ___strict-boolean-expressions    | tslint                   | typedef                       | Nothing special. Just enables the ability to filter specific warnings in the `tslint.json`.
 | ___typedef                       | tslint                   | typedef                       | Nothing special. Just enables the ability to filter specific warnings in the `tslint.json`.
 
-## Disable/enable rules by their orignal name in comment flags in source code
+## Disable/enable rules by their original name in comment flags in source code
 
 TSLint allows you to enable or disable specific rules by their name directly in the source code, like
 ```javascript
