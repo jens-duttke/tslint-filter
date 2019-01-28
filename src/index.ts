@@ -52,6 +52,10 @@ function applyWithFilter (linter: Linter, originalApplyMethod: RuleApplyAny, rul
 	return function (this: AbstractRule, sourceFile: ts.SourceFile, program?: ts.Program): Lint.RuleFailure[] {
 		const ignorePatterns: RegExp[] = extractIgnorePatterns(ruleName, this.ruleArguments);
 
+		// @ts-ignore
+		((this.options as object).ruleName as string) = ruleName;
+		this.ruleName = ruleName;
+
 		let failures: Lint.RuleFailure[];
 
 		try {

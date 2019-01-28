@@ -194,6 +194,16 @@ You can simply include them in your projects by adding `"extends": ["tslint-filt
 | ___strict-boolean-expressions    | tslint                   | typedef                       | Nothing special. Just enables the ability to filter specific warnings in the `tslint.json`.
 | ___typedef                       | tslint                   | typedef                       | Nothing special. Just enables the ability to filter specific warnings in the `tslint.json`.
 
+## Disable/enable rules by their orignal name in comment flags in source code
+
+TSLint allows you to enable or disable specific rules by their name directly in the source code, like
+```javascript
+// tslint:disable-next-line:rule-name
+```
+Normally, the `rule-name` is the name of the rule you use in your `tslint.json`. That would mean, if you change `interface-name` to `___interface-name`, you would also need to update all comments which are using this rule name.
+
+To avoid that, TSLint-Filter pretend to have the name of the original rule, so you don't need to change anything.
+
 ## Location of Rule Directories
 
 > It's an open to-do to determine the directory and rule file name automatically, based on the `rulesDirectory`, but I havn't found an easy way to do that yet.

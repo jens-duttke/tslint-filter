@@ -8,6 +8,9 @@ interface I18N {}
 interface IInterface {}
           ~~~~~~~~~~ [Interface name "IInterface" must not have an "I" prefix]
 
+// tslint:disable-next-line:interface-name
+interface ISomething {}
+
 class Test {
 	private readonly a;
 
