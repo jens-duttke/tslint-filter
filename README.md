@@ -188,6 +188,7 @@ You can simply include them in your projects by adding `"extends": ["tslint-filt
 |---|---|---|---
 | ___import-name                   | tslint-microsoft-contrib | import-name                   | Adds the full import path to the message.
 | ___interface-name                | tslint                   | interface-name                | Adds the criticized interface name to the message.
+| ___match-default-export-name     | tslint                   | match-default-export-name     | Adds the full import path to the message.
 | ___member-access                 | tslint                   | member-access                 | Nothing special. Just enables the ability to filter specific warnings in the `tslint.json`.
 | ___prefer-conditional-expression | tslint                   | prefer-conditional-expression | Adds an estimation of the saved characters, and the new size to the message.
 | ___strict-boolean-expressions    | tslint                   | typedef                       | Nothing special. Just enables the ability to filter specific warnings in the `tslint.json`.

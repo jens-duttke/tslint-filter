@@ -1,6 +1,7 @@
 import SomeModule from './some-module';
 import AnotherModule from './some-module';
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [Misnamed import. Import should be named 'someModule' but found 'AnotherModule' for './some-module']
+       ~~~~~~~~~~~~~ [Expected import 'AnotherModule' of module './some-module' to match the default export 'someModule'.]
 
 interface I18N {}
 

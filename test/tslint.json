@@ -10,6 +10,9 @@
 		"___interface-name": [true, "never-prefix", [
 			"Interface name \"I[\\d]"
 		]],
+		"___match-default-export-name": [true, [
+			"'SomeModule' .+ './some-module'"
+		]],
 		"___member-access": [true, [
 			"'(getDerivedStateFromProps|componentDidMount|shouldComponentUpdate|render|getSnapshotBeforeUpdate|componentDidUpdate|componentWillUnmount)'"
 		]],

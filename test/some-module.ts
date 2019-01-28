@@ -1,2 +1,3 @@
-export default true;
+declare const someModule = true;
 
+export default someModule;
