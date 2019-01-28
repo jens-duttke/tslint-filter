@@ -26,15 +26,15 @@
 	// Enable/disable JavaScript validation.
 	"javascript.validate.enable": false,
 
- 	 // The path to the rules configuration file
-	"tslint.configFile": "tslint.json",
-
 	// Control whether tslint is enabled for JavaScript files or not.
 	"tslint.jsEnable": true,
+
+	// Always show rule failures as warnings, independent of the tslint configuration.
+	"tslint.alwaysShowRuleFailuresAsWarnings": false,
 
 	// Specifies the icon theme used in the workbench.
 	"workbench.iconTheme": "material-icon-theme",
 
 	// Defines space handling before function argument parentheses.
-	"typescript.format.insertSpaceBeforeFunctionParenthesis": true,
+	"typescript.format.insertSpaceBeforeFunctionParenthesis": true
 }
