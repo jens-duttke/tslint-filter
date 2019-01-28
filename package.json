@@ -27,7 +27,7 @@
 		"preversion": "npm run lint && npm run build && npm run test",
 		"postversion": "git push && git push --tags && npm publish",
 		"build": "rimraf dist && tsc",
-		"lint": "tslint --project tsconfig.json --format stylish",
+		"lint": "tslint --project tsconfig.json --format verbose",
 		"test": "tslint --test test"
 	},
 	"dependencies": {
