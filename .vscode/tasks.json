@@ -1,0 +1,16 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "TSLint",
+			"type": "npm",
+			"script": "lint",
+			"problemMatcher": {
+				"base": "$tslint5",
+				"owner": "tslint",
+				"fileLocation": "absolute",
+				"applyTo": "closedDocuments"
+			}
+		}
+	]
+}
