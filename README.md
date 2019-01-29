@@ -28,16 +28,17 @@ Many TSLint rules are very limited by their configurability, and some rules look
 ### Ignore specific warnings
 
 For example, I want to prevent the usage of "I" as prefix for interface names. The TSLint rule for that is called "interface-name".<br />
-Unfortunately, this rule also shows an error for "I18N", which is an absolutely valid interface name for me.
+Unfortunately, this rule also shows an error for "I18N", which is an absolutely valid interface name to me.
 
-Or, in my React projects I want to get a warning, if I forgot to specify a Components class method as `private` or `public` using the "member-access" rule. But for the React methods `componentDidMount`, `render`, `componentDidUpdate` etc. I don't want to specify that, because they are always public.<br />
+Or, in my React projects I want to get a warning, if I forgot to specify a Components class method as `private` or `public` using the "member-access" rule. But for the React methods `componentDidMount`, `render`, `getDerivedStateFromProps` etc. I don't want to specify that, because they are always public.<br />
 Unfortunately, by now, it's not possible to specify a whitelist here.
 
 ### Extend rules
 
 I want to prefer conditional expressions for small, simple alignments, but "prefer-conditional-expression" also complains about complex statements, which wouldn't be easy readable in a single line, because this line would have a size of 300 characters or more.<br />
-Why isn't there a way to show the warning only, if the conditional expression would be a ...let's say... less-than-120-chars-one-liner?<br />
-Using TSLint Filter, you have to possibility to easily extend existing rules and suppress specific warnings, based on regular expressions.
+Why isn't there a way to show the warning only, if the conditional expression would be a ...let's say... less-than-120-chars-one-liner?
+
+Using TSLint-Filter, you have to possibility to easily extend existing rules and suppress specific warnings, based on regular expressions.
 
 It's even possible to use integer ranges in these regular expression, to filter by a range of numbers in the error message.
 
@@ -69,15 +70,15 @@ Since TSLint does not provide an easy way to modify warnings before they get ret
 
 But that's very easy:
 
-Create a folder for custom rules in your project folder
+Either use one of the [predefined rule wrappers](#predefined-rule-wrappers), or create a folder for custom rules in your project folder
 
-In this folder create a JavaScript file like:
+In this folder create a JavaScript file like this:
 ```javascript
 module.exports = require('tslint-filter')('tslint/lib/rules/memberAccessRule');
 ```
 "tslint/lib/rules/memberAccessRule" is the name of the original rule, which you want to extend.
 
-You can name the file to whatever you want, but it must end with "Rule.js". I prefer th use the name of the original rule, and prefix it with "___", so in this case "___memberAccessRule.js".
+You can name the file to whatever you want, but it must end with "Rule.js". I prefer to use the name of the original rule, and prefix it with "___" (3x underscore), so in this case "___memberAccessRule.js".
 
 In your `tslint.json` add the folder to the "rulesDirectory" section:
 ```json
@@ -153,7 +154,7 @@ module.exports = require('tslint-filter')('tslint/lib/rules/preferConditionalExp
         return;
       }
 
-      failure.failure = `${failure.failure} (save about ${originalSize - newLength} characters, conditional expression size would be about ${newLength} characters)`
+      failure.failure = `${failure.failure} (save about ${originalSize - newLength} characters, conditional expression size would be about ${newLength} characters)`;
     }
 
     return failure;
@@ -170,12 +171,13 @@ Now you can use this pattern, to prevent warnings, where the conditional express
 ```
 
 Ranges can be specified with:
+
 | RegExp character sets | Meaning
 |---|---
 | `[-5...5]` | Any integer number from -5 to 5
 | `[...100]` | Any integer number from -999999999999999 to 100
 | `[10...]`  | Any integer number from 10 to 999999999999999
-| `[...]`    | Any integer number from -999999999999999 to 999999999999999, but if possible you should prefer `-?\d+`
+| `[...]`    | Any integer number from -999999999999999 to 999999999999999,<br />but if possible you should prefer `-?\d+`
 
 `-999999999999999` and `999999999999999` are required, because the expression is converted into a valid RegExp, and here we always need to specify a range.<br />
 These numbers are choosen because they are very near to Number.MIN_SAFE_INTEGER and Number.MAX_SAFE_INTEGER, but the RegExp representation is still very short.
@@ -185,15 +187,15 @@ These numbers are choosen because they are very near to Number.MIN_SAFE_INTEGER 
 The TSLint-Filter package contains a couple of predefined rule wrappers, which I'm using in my projects.
 You can simply include them in your projects by adding `"extends": ["tslint-filter"]` to your `tslint.json`, or by adding `"node_modules/tslint-filter/rules"` to the `"rulesDirectory"` section.
 
-| Rule Name | Original Rule Package | Original Rule Name | Description
+| Rule Name | Original Rule Package | Description
 |---|---|---|---
-| ___import-name                   | tslint-microsoft-contrib | import-name                   | Adds the full import path to the message.
-| ___interface-name                | tslint                   | interface-name                | Adds the criticized interface name to the message.
-| ___match-default-export-name     | tslint                   | match-default-export-name     | Adds the full import path to the message.
-| ___member-access                 | tslint                   | member-access                 | Nothing special. Just enables the ability to filter specific warnings in the `tslint.json`.
-| ___prefer-conditional-expression | tslint                   | prefer-conditional-expression | Adds an estimation of the saved characters, and the new size to the message.
-| ___strict-boolean-expressions    | tslint                   | typedef                       | Nothing special. Just enables the ability to filter specific warnings in the `tslint.json`.
-| ___typedef                       | tslint                   | typedef                       | Nothing special. Just enables the ability to filter specific warnings in the `tslint.json`.
+| ___import-name                   | tslint-microsoft-contrib | Adds the full import path to the message.<br /><sub>**Original message:**<br />Misnamed import. Import should be named 'xyz' but found 'zyx'<br />**New message:**<br />Misnamed import. Import should be named 'xyz' but found 'zyx' for './my-modules/xyz'</sub>
+| ___interface-name                | tslint                   | Adds the criticized interface name to the message.<br /><sub>**Original message:**><br />Interface name must not have an "I" prefix<br />**New message:**<br />Interface name "I18N" must not have an "I" prefix</sub>
+| ___match-default-export-name     | tslint                   | Adds the full import path to the message.<br /><sub>**Original message:**<br />Expected import 'xyz' to match the default export 'zyx'.<br />**New message:**<br />Expected import 'xyz' of module './my-modules/xyz' to match the default export 'zyx'.</sub>
+| ___member-access                 | tslint                   | Nothing special. Just enables the ability to filter specific warnings in the `tslint.json`.
+| ___prefer-conditional-expression | tslint                   | Adds an estimation of the saved characters, and the new size to the message.<br /><sub>**Original message:**<br />Use a conditional expression instead of assigning to 'myVar' in multiple places.<br />**New message:**<br />Use a conditional expression instead of assigning to 'myVar' in multiple places. (save about 36 characters, conditional expression size would be about 29 characters)</sub>
+| ___strict-boolean-expressions    | tslint                   | Nothing special. Just enables the ability to filter specific warnings in the `tslint.json`.
+| ___typedef                       | tslint                   | Nothing special. Just enables the ability to filter specific warnings in the `tslint.json`.
 
 ## Disable/enable rules by their original name in comment flags in source code
 
