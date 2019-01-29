@@ -188,7 +188,7 @@ The TSLint-Filter package contains a couple of predefined rule wrappers, which I
 You can simply include them in your projects by adding `"extends": ["tslint-filter"]` to your `tslint.json`, or by adding `"node_modules/tslint-filter/rules"` to the `"rulesDirectory"` section.
 
 | Rule Name | Original Rule Package | Description
-|---|---|---|---
+|---|---|---
 | ___import-name                   | tslint-microsoft-contrib | Adds the full import path to the message.<br /><sub>**Original message:**<br />Misnamed import. Import should be named 'xyz' but found 'zyx'<br />**New message:**<br />Misnamed import. Import should be named 'xyz' but found 'zyx' for './my-modules/xyz'</sub>
 | ___interface-name                | tslint                   | Adds the criticized interface name to the message.<br /><sub>**Original message:**><br />Interface name must not have an "I" prefix<br />**New message:**<br />Interface name "I18N" must not have an "I" prefix</sub>
 | ___match-default-export-name     | tslint                   | Adds the full import path to the message.<br /><sub>**Original message:**<br />Expected import 'xyz' to match the default export 'zyx'.<br />**New message:**<br />Expected import 'xyz' of module './my-modules/xyz' to match the default export 'zyx'.</sub>
