@@ -105,15 +105,13 @@ Beside simply ignoring linting errors, you can also manipulate them. You can cha
 For example, we want to extend the "interface-name" rule, to allow the interface name "I18N", even if it starts with "I".<br />
 Unfortunately, the message of this rule does not provide the name of the interface, so first, we have to include the name into the message:
 ```javascript
-const Utils = require('tsutils');
+const utils = require('tsutils');
 
-module.exports = require('tslint-filter')('tslint/lib/rules/interfaceNameRule', {
+module.exports = require('../dist')('tslint/lib/rules/interfaceNameRule', {
   modifyFailure (failure) {
-    const node = Utils.getTokenAtPosition(failure.sourceFile, failure.getStartPosition().getPosition());
+    const node = utils.getTokenAtPosition(failure.sourceFile, failure.getStartPosition().getPosition());
 
-    if (node.escapedText) {
-      failure.failure = `Interface name "${node.escapedText}" must not have an "I" prefix`;
-    }
+    failure.failure = `Interface name "${node.getText()}" must not have an "I" prefix`;
 
     return failure;
   }
@@ -130,31 +128,33 @@ Now you can ignore interface names, starting with "I" followed by a digit:
 For example the "prefer-conditional-expression" rule could be extended to show the approximated number of characters you could save, and also the approximated size if you write the statement as conditional expression:
 
 ```javascript
-const Utils = require('tsutils');
+const utils = require('tsutils');
 
 module.exports = require('tslint-filter')('tslint/lib/rules/preferConditionalExpressionRule', {
   modifyFailure (failure) {
     const match = failure.getFailure().match(/'([^\0]+)'/);
 
     if (match !== null) {
-      const node = Utils.getTokenAtPosition(failure.sourceFile, failure.getStartPosition().getPosition());
-      const parent = node.parent;
+      const node = utils.getTokenAtPosition(failure.sourceFile, failure.getStartPosition().getPosition()).parent;
 
-      const originalSize = (parent.end - parent.pos);
+      if (utils.isIfStatement(node)) {
+        const originalSize = (node.end - node.pos);
 
-      const assigneeLength = match[1].length;
-      const expressionLength = parent.expression.end - parent.expression.pos;
-      const thenStatementLength = parent.thenStatement.getText().replace(/^{?[\s\n]+|[\s\n]+}?$/g, '').length;
-      const elseStatementLength = parent.elseStatement.getText().replace(/^{?[\s\n]+|[\s\n]+}?$/g, '').length;
+        const assigneeLength = match[1].length;
+        const expressionLength = node.expression.end - node.expression.pos;
+        const thenStatementLength = node.thenStatement.getText().replace(/^{?[\s\n]+|[\s\n]+}?$/g, '').length;
+        const elseStatementLength = node.elseStatement.getText().replace(/^{?[\s\n]+|[\s\n]+}?$/g, '').length;
 
-      // That's only an approximated size, depending on the wrapping characters
-      newLength = expressionLength + thenStatementLength + elseStatementLength - assigneeLength + 1;
+        // That's only an approximated size, depending on the wrapping characters
+        const newLength = expressionLength + thenStatementLength + elseStatementLength - assigneeLength + 1;
 
-      if (newLength > originalSize) {
-        return;
+        if (newLength > originalSize) {
+          // If no value is returned, the linter error get suppressed
+          return;
+        }
+
+        failure.failure = `${failure.failure} (save about ${originalSize - newLength} characters, conditional expression size would be about ${newLength} characters)`;
       }
-
-      failure.failure = `${failure.failure} (save about ${originalSize - newLength} characters, conditional expression size would be about ${newLength} characters)`;
     }
 
     return failure;

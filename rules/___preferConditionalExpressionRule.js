@@ -19,6 +19,7 @@ module.exports = require('../dist')('tslint/lib/rules/preferConditionalExpressio
 				const newLength = expressionLength + thenStatementLength + elseStatementLength - assigneeLength + 1;
 
 				if (newLength > originalSize) {
+					// If no value is returned, the linter error get suppressed
 					return;
 				}
 
