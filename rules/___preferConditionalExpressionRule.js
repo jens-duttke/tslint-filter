@@ -22,7 +22,7 @@ module.exports = require('../dist')('tslint/lib/rules/preferConditionalExpressio
 				return;
 			}
 
-			failure.failure = `${failure.failure} (save about ${originalSize - newLength} characters, conditional expression size would be about ${newLength} characters)`
+			failure.failure = `${failure.failure} (save about ${originalSize - newLength} characters, conditional expression size would be about ${newLength} characters)`;
 		}
 
 		return failure;

@@ -3,7 +3,7 @@ const Utils = require('tsutils');
 module.exports = require('../dist')('tslint/lib/rules/matchDefaultExportNameRule', {
 	modifyFailure (failure) {
 		const node = Utils.getTokenAtPosition(failure.sourceFile, failure.getStartPosition().getPosition());
-		const moduleSpecifier = node.parent.parent.importClause.parent.moduleSpecifier.text
+		const moduleSpecifier = node.parent.parent.importClause.parent.moduleSpecifier.text;
 
 		failure.failure = failure.failure.replace(
 			/^Expected import '(.+?)' to match the default export '(.+?)'.$/,
