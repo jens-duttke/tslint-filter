@@ -7,6 +7,7 @@ module.exports = require('../dist')('tslint-microsoft-contrib/importNameRule', {
 
 			failure.failure += ` for '${node.parent.moduleSpecifier.text}'`;
 		}
+
 		return failure;
 	}
 });
