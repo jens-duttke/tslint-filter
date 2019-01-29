@@ -86,7 +86,8 @@ function applyWithFilter (linter: Linter, originalApplyMethod: RuleApplyAny, rul
 	const ruleName: string = linter.Rule.metadata.ruleName;
 
 	return function (this: AbstractRule, sourceFile: ts.SourceFile, program?: ts.Program): Lint.RuleFailure[] {
-		const ignorePatterns: RegExp[] = extractIgnorePatterns(ruleName, this.ruleArguments);
+		const ignorePatterns: RegExp[] | undefined = extractIgnorePatterns(this.ruleArguments);
+		const filterRuleName: string = this.ruleName;
 
 		// @ts-ignore
 		((this.options as object).ruleName as string) = ruleName;
@@ -110,7 +111,12 @@ function applyWithFilter (linter: Linter, originalApplyMethod: RuleApplyAny, rul
 			failures = failures.map(options.modifyFailure).filter(isFailure);
 		}
 
-		failures = failures.filter((failure) => !ignorePatterns.some((regex) => regex.test(failure.getFailure())));
+		if (ignorePatterns === undefined) {
+			failures.push(new Lint.RuleFailure(sourceFile, 0, 1, `No filter configuration given for rule '${filterRuleName}'`, this.ruleName));
+		}
+		else {
+			failures = failures.filter((failure) => !ignorePatterns.some((regex) => regex.test(failure.getFailure())));
+		}
 
 		return failures;
 	};
@@ -120,11 +126,11 @@ function getRuleNameByFileName (ruleFile: string): string {
 	return ruleFile.replace(/^.*\/|Rule\.?.*$/g, '').replace(/([A-Z])/g, '-$1').toLowerCase();
 }
 
-function extractIgnorePatterns (ruleName: string, ruleArguments: any[]): RegExp[] | never {
+function extractIgnorePatterns (ruleArguments: any[]): RegExp[] | undefined {
 	const lastRuleArgument: any = ruleArguments[ruleArguments.length - 1];
 
 	if (!Array.isArray(lastRuleArgument)) {
-		throw new Error(`No filter configuration given for rule '${ruleName}'`);
+		return undefined;
 	}
 
 	const ignorePatterns: RegExp[] = lastRuleArgument.map(stringToRegExp);
