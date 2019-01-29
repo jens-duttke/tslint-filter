@@ -1,9 +1,12 @@
 {
 	"extends": ["../dist/index.js"],
 	"rulesDirectory": [
+		".",
 		"tslint-microsoft-contrib"
 	],
 	"rules": {
+		"___does-not-exist": [true, [
+		]],
 		"___import-name": [true, [
 			"'someModule' .+ 'SomeModule'"
 		]],

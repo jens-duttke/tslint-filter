@@ -23,7 +23,30 @@ type RuleApplyWithProgram =  (sourceFile: ts.SourceFile, program: ts.Program) =>
 type RuleApplyAny = RuleApply | RuleApplyWithProgram;
 
 function addFilter (ruleFile: string, options: AddFilterOptions = { }): Linter {
-	const linter: Linter = require(ruleFile) as Linter;
+	const linterOrError: Linter | Error = getLinter(ruleFile);
+
+	if (linterOrError instanceof Error) {
+		const error: Error = linterOrError;
+
+		class Rule extends Lint.Rules.AbstractRule {
+			public static metadata: Lint.IRuleMetadata = {
+				ruleName: getRuleNameByFileName(ruleFile),
+				type: 'functionality',
+				description: `Error while loading '${ruleFile}'.`,
+				optionsDescription: 'Not configurable.',
+				options: null,
+				typescriptOnly: false
+			};
+
+			public apply (sourceFile: ts.SourceFile): Lint.RuleFailure[] {
+				return [getFailureByError(error, ruleFile, this.ruleName, sourceFile)];
+			}
+		}
+
+		return { Rule };
+	}
+
+	const linter: Linter = linterOrError;
 	const RulePrototype: Lint.IRule | Lint.ITypedRule = linter.Rule.prototype as Lint.IRule | Lint.ITypedRule;
 
 	if (Lint.isTypedRule(RulePrototype)) {
@@ -43,6 +66,19 @@ function addFilter (ruleFile: string, options: AddFilterOptions = { }): Linter {
 addFilter.rulesDirectory = '../rules';
 
 module.exports = addFilter;
+
+function getLinter (ruleFile: string): Linter | Error {
+	try {
+		return require(ruleFile) as Linter;
+	}
+	catch (error) {
+		if (error instanceof Error) {
+			return error;
+		}
+
+		return new Error(`Unable to load ${ruleFile}.`);
+	}
+}
 
 function applyWithFilter (linter: Linter, originalApplyMethod: RuleApply, ruleFile: string, options: AddFilterOptions): RuleApply;
 function applyWithFilter (linter: Linter, originalApplyMethod: RuleApplyWithProgram, ruleFile: string, options: AddFilterOptions): RuleApplyWithProgram;
@@ -78,6 +114,10 @@ function applyWithFilter (linter: Linter, originalApplyMethod: RuleApplyAny, rul
 
 		return failures;
 	};
+}
+
+function getRuleNameByFileName (ruleFile: string): string {
+	return ruleFile.replace(/^.*\/|Rule\.?.*$/g, '').replace(/([A-Z])/g, '-$1').toLowerCase();
 }
 
 function extractIgnorePatterns (ruleName: string, ruleArguments: any[]): RegExp[] | never {
