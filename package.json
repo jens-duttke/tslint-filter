@@ -24,7 +24,7 @@
 		"publish:major": "npm version major",
 		"publish:minor": "npm version minor",
 		"publish:patch": "npm version patch",
-		"preversion": "npm run lint && npm run build && npm run test",
+		"preversion": "npm run lint && npm run build && npm run test && assert-outdated-npm-modules --max-warnings 0",
 		"postversion": "git push && git push --tags && npm publish",
 		"build": "rimraf dist && tsc",
 		"lint": "tslint --project tsconfig.json --format verbose",
@@ -35,6 +35,7 @@
 	},
 	"devDependencies": {
 		"@types/node": "^10.12.18",
+		"assert-outdated": "^3.2.0",
 		"glob": "^7.1.3",
 		"rimraf": "^2.6.3",
 		"tslint": "^5.12.1",
