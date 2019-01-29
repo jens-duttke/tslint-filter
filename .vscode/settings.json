@@ -23,9 +23,6 @@
 	// When enabled, will trim trailing whitespace when saving a file.
 	"files.trimTrailingWhitespace": true,
 
-	// Enable/disable JavaScript validation.
-	"javascript.validate.enable": false,
-
 	// Control whether tslint is enabled for JavaScript files or not.
 	"tslint.jsEnable": true,
 
@@ -38,5 +35,11 @@
 	// Defines space handling before function argument parentheses.
 	"typescript.format.insertSpaceBeforeFunctionParenthesis": true,
 
-	"typescript.tsdk": "node_modules\\typescript\\lib"
+	"typescript.tsdk": "node_modules\\typescript\\lib",
+
+	"javascript.implicitProjectConfig.checkJs": true,
+
+	"javascript.preferences.quoteStyle": "single",
+
+	"typescript.preferences.quoteStyle": "single",
 }
