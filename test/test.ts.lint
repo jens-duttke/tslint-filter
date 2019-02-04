@@ -13,6 +13,24 @@ interface IInterface {}
 // tslint:disable-next-line:interface-name
 interface ISomething {}
 
+interface A {
+	a: string;
+	b: string;
+}
+
+const a: A = {
+	b: '',
+	a: ''
+	~ [The key 'a' is not in the same order as it is in 'A'.]
+};
+
+const b: Readonly<A> = {
+	b: '',
+	a: ''
+};
+
+console.log(a, b);
+
 class Test {
 	private readonly a;
 

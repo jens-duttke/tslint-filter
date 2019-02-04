@@ -20,6 +20,9 @@
 			"'(getDerivedStateFromProps|componentDidMount|shouldComponentUpdate|render|getSnapshotBeforeUpdate|componentDidUpdate|componentWillUnmount)'"
 		]],
 		"___no-import-side-effect": true,
+		"___object-literal-sort-keys": [true, "match-declaration-order", [
+			"The key '.+?' is not sorted alphabetically"
+		]],
 		"___prefer-conditional-expression": [true, "check-else-if", [
 			"conditional expression size would be about [120...]"
 		]],
