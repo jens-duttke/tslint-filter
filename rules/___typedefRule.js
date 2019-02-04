@@ -1,4 +1,3 @@
-const ts = require('typescript');
 const utils = require('tsutils');
 
 module.exports = require('../dist')('tslint/lib/rules/typedefRule', {
