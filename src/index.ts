@@ -108,7 +108,9 @@ function applyWithFilter (linter: Linter, originalApplyMethod: RuleApplyAny, rul
 		}
 
 		if (typeof options.modifyFailure === 'function') {
-			failures = failures.map(options.modifyFailure).filter(isFailure);
+			const modifyFailure = options.modifyFailure.bind(this);
+
+			failures = failures.map(modifyFailure).filter(isFailure);
 		}
 
 		if (ignorePatterns === undefined) {
