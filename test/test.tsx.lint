@@ -13,8 +13,6 @@ interface IInterface {}
 // tslint:disable-next-line:interface-name
 interface ISomething {}
 
-/* --- Test for ___object-literal-sort-keys --- */
-
 interface A {
 	a: string;
 	b: string;
@@ -32,14 +30,6 @@ const b: Readonly<A> = {
 };
 
 console.log(a, b);
-
-/* --- Test for ___typedef --- */
-
-const a: () => number = () => {
-    return '';
-};
-
-/* Different tests */
 
 class Test {
 	private readonly a;
