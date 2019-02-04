@@ -27,13 +27,15 @@
 			"conditional expression size would be about [120...]"
 		]],
 		"___strict-boolean-expressions": [true, "allow-boolean-or-undefined", "allow-enum", [
-			"'\\|\\|'"
+			"'\\|\\|'",
+			"operator in JsxExpression"
 		]],
 		"___typedef": {
 			"options": ["call-signature", "arrow-call-signature", "parameter", "property-declaration", "variable-declaration", "member-variable-declaration", [
 				"\\bmember-variable-declaration: 'a'",
 				"\\bcall-signature: 'helloWorld'",
-				"\\bparameter: '(a|b|c)'"
+				"\\bparameter: '(a|b|c)'",
+				"call-signature: '(getDerivedStateFromProps|componentDidMount|shouldComponentUpdate|render|getSnapshotBeforeUpdate|componentDidUpdate|componentWillUnmount)'"
 			]]
 		}
 	}

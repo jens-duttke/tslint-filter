@@ -51,7 +51,7 @@ class Test {
 
 		const s1: string[] = b || [];
 		const s2: string[] = b && [];
-		                          ~~ [This type is not allowed in the operand for the '&&' operator because it is always truthy. It may be null/undefined, but neither 'allow-null-union' nor 'allow-undefined-union' is set. Allowed types are boolean, enum, or boolean-or-undefined.]
+		                          ~~ [This type is not allowed in the operand for the '&&' operator in VariableDeclaration because it is always truthy. It may be null/undefined, but neither 'allow-null-union' nor 'allow-undefined-union' is set. Allowed types are boolean, enum, or boolean-or-undefined.]
 
 		if (SomeModule) {
 		~~ [Use a conditional expression instead of assigning to 'a' in multiple places. (save about 36 characters, conditional expression size would be about 29 characters)]
@@ -72,5 +72,22 @@ class Test {
 		}
 	}
 
-	render (): void {}
+	render () {
+		const isShowMessage: boolean = Math.random() > 0.5;
+
+		const a: string | false = (true && isShowMessage && 'Hello world');
+		                                                    ~~~~~~~~~~~~~ [This type is not allowed in the operand for the '&&' operator in VariableDeclaration because it is always truthy. It may be null/undefined, but neither 'allow-null-union' nor 'allow-undefined-union' is set. Allowed types are boolean, enum, or boolean-or-undefined.]
+
+		if ((true && isShowMessage && 'Hello world')) {
+		    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [This type is not allowed in the 'if' condition because it could be a string. Allowed types are boolean, enum, or boolean-or-undefined.]
+		                              ~~~~~~~~~~~~~ [This type is not allowed in the operand for the '&&' operator in IfStatement because it is always truthy. It may be null/undefined, but neither 'allow-null-union' nor 'allow-undefined-union' is set. Allowed types are boolean, enum, or boolean-or-undefined.]
+			console.log(a);
+		}
+
+		return (
+			<div>
+				{(true && isShowMessage && 'Hello world')}
+			</div>
+		);
+	}
 }
