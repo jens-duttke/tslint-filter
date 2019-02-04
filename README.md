@@ -218,9 +218,9 @@ So, for now, it's required to specify the whole path to the rule, instead of jus
 |---|---|---:
 | [tslint](https://www.npmjs.com/package/tslint)                                                         | tslint/lib/rules/                        | 152
 | [tslint-microsoft-contrib](https://www.npmjs.com/package/tslint-microsoft-contrib)                     | tslint-microsoft-contrib/                | 93
-| [tslint-sonarts](https://www.npmjs.com/package/tslint-sonarts)                                         | tslint-sonarts/lib/rules/                | 62
+| [tslint-sonarts](https://www.npmjs.com/package/tslint-sonarts)                                         | tslint-sonarts/lib/rules/                | 71
+| [rxjs-tslint-rules](https://www.npmjs.com/package/rxjs-tslint-rules)                                   | rxjs-tslint-rules/dist/rules/            | 39
 | [tslint-eslint-rules](https://www.npmjs.com/package/tslint-eslint-rules)                               | tslint-eslint-rules/dist/rules/          | 38
-| [rxjs-tslint-rules](https://www.npmjs.com/package/rxjs-tslint-rules)                                   | rxjs-tslint-rules/dist/rules/            | 37
 | [tslint-consistent-codestyle](https://www.npmjs.com/package/tslint-consistent-codestyle)               | tslint-consistent-codestyle/rules/       | 19
 | [tslint-config-security](https://www.npmjs.com/package/tslint-config-security)                         | tslint-config-security/dist/rules/       | 16
 | [tslint-immutable](https://www.npmjs.com/package/tslint-immutable)                                     | tslint-immutable/rules/                  | 15
@@ -237,7 +237,7 @@ So, for now, it's required to specify the whole path to the rule, instead of jus
 | [tslint-origin-ordered-imports-rule](https://www.npmjs.com/package/tslint-origin-ordered-imports-rule) | tslint-origin-ordered-imports-rule/dist/ | 1
 | [tslint-plugin-prettier](https://www.npmjs.com/package/tslint-plugin-prettier)                         | tslint-plugin-prettier/rules/            | 1
 
-\* as of 2019-01-16. List ordered by number of rules.
+\* as of 2019-02-04. List ordered by number of rules.
 
 ## Rule File Names
 
