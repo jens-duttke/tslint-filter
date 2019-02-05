@@ -1,5 +1,5 @@
 /*!
- * @fileOverview Suppress and modify failures, before they get returned by TSLint
+ * @fileOverview Suppress and extend failures, before they get returned by TSLint
  * @author <a href="mailto:github@duttke.de">Jens Duttke</a>
  */
 

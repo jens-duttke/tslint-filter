@@ -5,7 +5,7 @@
 [![MIT license](https://img.shields.io/github/license/jens-duttke/tslint-filter.svg?style=flat)](https://opensource.org/licenses/MIT)
 
 # TSLint-Filter
-Suppress and modify TSLint linting errors, before they get returned to the console or your code editor.
+Suppress and extend TSLint linting errors, before they get returned to the console or your code editor.
 
 **Table of Contents**
 
