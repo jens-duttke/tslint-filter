@@ -108,7 +108,7 @@ function applyWithFilter (linter: Linter, originalApplyMethod: RuleApplyAny, rul
 		}
 
 		if (typeof options.modifyFailure === 'function') {
-			const modifyFailure = options.modifyFailure.bind(this);
+			const modifyFailure: (failure: Lint.RuleFailure) => Lint.RuleFailure | undefined = options.modifyFailure.bind(this);
 
 			failures = failures.map(modifyFailure).filter(isFailure);
 		}
