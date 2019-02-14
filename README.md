@@ -16,6 +16,8 @@ Suppress and extend TSLint linting errors, before they get returned to the conso
 - [Installation](#installation)
 - [Basic Usage](#basic-usage)
 - [Extended Usage](#extended-usage)
+  - [Example #1](#example-1)
+  - [Example #2](#example-2)
 - [Predefined rule wrappers](#predefined-rule-wrappers)
 - [Disable/enable rules by their original name in comment flags in source code](#disableenable-rules-by-their-original-name-in-comment-flags-in-source-code)
 - [Location of Rule Directories](#location-of-rule-directories)
@@ -50,7 +52,7 @@ import './polyfill'
 ```
 While TSLint doesn't handle such JavaScript errors, your code editor may suppress this error silently and may stop linting your whole project or at least the current file, so that you think your files are free of issues, because your editor doesn't show any.
 
-TSLint-Filter catches such JavaScript errors and show them as normal linter errors for the first character of a file, so that you get visual feedback, that there's something wrong.
+TSLint-Filter catches such JavaScript errors and show them as normal linting errors for the first character of a file, so that you get visual feedback, that there's something wrong.
 
 Using the filter ability of TSLint-Filter you are then also able to suppress the specific error, without to affect the execution of other rules.
 
@@ -102,16 +104,61 @@ The last parameter **must** be always an array with regular expressions. Linting
 
 Beside simply ignoring linting errors, you can also manipulate them. You can change the message, implement a fix or whatever you like.
 
+Here is a simply starting point for own scripts:
+```javascript
+const utils = require('tsutils');
+
+module.exports = require('tslint-filter')('tslint/lib/rules/...', {
+  /**
+   * @param {import('tslint').RuleFailure} [failure]
+   * @param {import('typescript').SourceFile} [sourceFile]
+   * @param {ts.Program | undefined} [program]
+   */
+  modifyFailure (failure, sourceFile, program) {
+    const node = utils.getTokenAtPosition(sourceFile, failure.getStartPosition().getPosition());
+
+    if (program) {
+      const checker = program.getTypeChecker();
+
+      // Work with types here ...
+    }
+
+    if (node.getText() === 'SomeText') {
+      // If no value is returned, the linting error get suppressed
+      return;
+    }
+
+    if (utils.isImportDeclaration(node.parent)) {
+      // If a string is returned, the original linting error message get changed
+      return `${failure.getFailure()} some more text.`;
+    }
+
+    // Keep the original linting error untouched. You could also create a new RuleFailure and return it
+    return failure;
+  }
+});
+```
+
+### Example #1
+
 For example, we want to extend the "interface-name" rule, to allow the interface name "I18N", even if it starts with "I".<br />
 Unfortunately, the message of this rule does not provide the name of the interface, so first, we have to include the name into the message:
 ```javascript
 const utils = require('tsutils');
 
-module.exports = require('../dist')('tslint/lib/rules/interfaceNameRule', {
-  modifyFailure (failure) {
-    const node = utils.getTokenAtPosition(failure.sourceFile, failure.getStartPosition().getPosition());
+module.exports = require('tslint-filter')('tslint-microsoft-contrib/importNameRule', {
+  /**
+   * @param {import('tslint').RuleFailure} [failure]
+   * @param {import('typescript').SourceFile} [sourceFile]
+   */
+  modifyFailure (failure, sourceFile) {
+    if (/^Misnamed import\./.test(failure.getFailure())) {
+      const node = utils.getTokenAtPosition(sourceFile, failure.getStartPosition().getPosition());
 
-    failure.failure = `Interface name "${node.getText()}" must not have an "I" prefix`;
+      if (utils.isImportDeclaration(node.parent) && utils.isLiteralExpression(node.parent.moduleSpecifier)) {
+        return `${failure.getFailure()} for '${node.parent.moduleSpecifier.text}'`;
+      }
+    }
 
     return failure;
   }
@@ -125,17 +172,23 @@ Now you can ignore interface names, starting with "I" followed by a digit:
 ]],
 ```
 
+### Example #2
+
 For example the "prefer-conditional-expression" rule could be extended to show the approximated number of characters you could save, and also the approximated size if you write the statement as conditional expression:
 
 ```javascript
 const utils = require('tsutils');
 
 module.exports = require('tslint-filter')('tslint/lib/rules/preferConditionalExpressionRule', {
-  modifyFailure (failure) {
+  /**
+   * @param {import('tslint').RuleFailure} [failure]
+   * @param {import('typescript').SourceFile} [sourceFile]
+   */
+  modifyFailure (failure, sourceFile) {
     const match = failure.getFailure().match(/'([^\0]+)'/);
 
     if (match !== null) {
-      const node = utils.getTokenAtPosition(failure.sourceFile, failure.getStartPosition().getPosition()).parent;
+      const node = utils.getTokenAtPosition(sourceFile, failure.getStartPosition().getPosition()).parent;
 
       if (utils.isIfStatement(node)) {
         const originalSize = (node.end - node.pos);
@@ -149,11 +202,10 @@ module.exports = require('tslint-filter')('tslint/lib/rules/preferConditionalExp
         const newLength = expressionLength + thenStatementLength + elseStatementLength - assigneeLength + 1;
 
         if (newLength > originalSize) {
-          // If no value is returned, the linter error get suppressed
           return;
         }
 
-        failure.failure = `${failure.failure} (save about ${originalSize - newLength} characters, conditional expression size would be about ${newLength} characters)`;
+        return `${failure.getFailure()} (save about ${originalSize - newLength} characters, conditional expression size would be about ${newLength} characters)`;
       }
     }
 
