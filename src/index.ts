@@ -112,9 +112,9 @@ function applyWithFilter (linter: Linter, originalApplyMethod: RuleApplyAny, rul
 				failure: Lint.RuleFailure,
 				sourceFile: ts.SourceFile,
 				program: ts.Program | undefined
-			) => Lint.RuleFailure | undefined = options.modifyFailure.bind(this);
+			) => Lint.RuleFailure | string | undefined = options.modifyFailure.bind(this);
 
-			failures = failures.map((failure) => modifyFailure(failure, sourceFile, program)).filter(isFailure);
+			failures = failures.map((failure) => updateFailure(sourceFile, failure, modifyFailure(failure, sourceFile, program))).filter(isFailure);
 		}
 
 		if (ignorePatterns === undefined) {
@@ -181,6 +181,21 @@ function getFailureByError (error: any, ruleFile: string, originalRuleName: stri
 	}
 
 	return new Lint.RuleFailure(sourceFile, 0, 1, `${title} in '${ruleFile}': ${message}. Rule is disabled for this file`, originalRuleName);
+}
+
+function updateFailure (sourceFile: ts.SourceFile, failure: Lint.RuleFailure, newFailure: Lint.RuleFailure | string | undefined): Lint.RuleFailure | undefined {
+	if (typeof newFailure === 'string') {
+		return new Lint.RuleFailure(
+			sourceFile,
+			failure.getStartPosition().getPosition(),
+			failure.getEndPosition().getPosition(),
+			newFailure,
+			failure.getRuleName(),
+			failure.getFix()
+		);
+	}
+
+	return failure;
 }
 
 function isFailure (failure: Lint.RuleFailure | undefined): failure is Lint.RuleFailure {
