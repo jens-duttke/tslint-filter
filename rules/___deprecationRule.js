@@ -8,6 +8,10 @@ module.exports = require('../dist')('tslint/lib/rules/deprecationRule', {
 	 * @param {ts.Program | undefined} [program]
 	 */
 	modifyFailure (failure, sourceFile, program) {
+		if (!program) {
+			return failure;
+		}
+
 		const checker = program.getTypeChecker();
 		const node = utils.getTokenAtPosition(sourceFile, failure.getStartPosition().getPosition()).parent;
 
