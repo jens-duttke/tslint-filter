@@ -14,14 +14,16 @@ Suppress and extend TSLint linting errors, before they get returned to the conso
   - [Extend rules](#extend-rules)
   - [Handle JavaScript errors in rules](#handle-javascript-errors-in-rules)
 - [Installation](#installation)
-- [Basic Usage](#basic-usage)
-- [Extended Usage](#extended-usage)
-  - [Example #1](#example-1)
-  - [Example #2](#example-2)
 - [Predefined rule wrappers](#predefined-rule-wrappers)
 - [Disable/enable rules by their original name in comment flags in source code](#disableenable-rules-by-their-original-name-in-comment-flags-in-source-code)
-- [Location of Rule Directories](#location-of-rule-directories)
-- [Rule File Names](#rule-file-names)
+- [Custom rule wrappers](#custom-rule-wrappers)
+  - [Basic Usage](#basic-usage)
+  - [Extended Usage](#extended-usage)
+    - [Example #1](#example-1)
+    - [Example #2](#example-2)
+  - [Ranges in regular expressions](#ranges-in-regular-expressions)
+  - [Location of Rule Directories](#location-of-rule-directories)
+  - [Rule File Names](#rule-file-names)
 
 ## Use Cases
 
@@ -42,7 +44,7 @@ Why isn't there a way to show the linting error only, if the conditional express
 
 Using TSLint-Filter, you have to possibility to easily extend existing rules and suppress specific linting errors, based on regular expressions.
 
-It's even possible to use integer ranges in these regular expression, to filter by a range of numbers in the error message.
+It's even possible to use integer [ranges in these regular expression](#ranges-in-regular-expressions), to filter by a range of numbers in the error message.
 
 ### Handle JavaScript errors in rules
 
@@ -66,13 +68,66 @@ Install with npm
 npm install tslint-filter --save-dev
 ```
 
-## Basic Usage
-
 Since TSLint does not provide an easy way to modify linting errors before they get returned, we need to create own rules, with TSLint-Filter as wrapper for the original rule.
 
 But that's very easy:
 
-Either use one of the [predefined rule wrappers](#predefined-rule-wrappers), or create a folder for custom rules in your project folder
+Either use one of the [predefined rule wrappers](#predefined-rule-wrappers), or create a [custom rule wrapper](#custom-rule-wrappers).
+
+## Predefined rule wrappers
+
+The TSLint-Filter package contains a couple of predefined rule wrappers, which I'm using in my projects.
+
+In your `tslint.json` add either:
+```
+"extends": [
+  "tslint-filter"
+]
+```
+or
+```
+"rulesDirectory": [
+  "node_modules/tslint-filter/rules"
+]
+```
+
+Now, you can replace the original rule, by one of the following predefined rule wrappers:
+
+| Rule Name | Original Rule | Description
+|---|---|---
+| ___deprecation                   | tslint &raquo; [deprecation](https://palantir.github.io/tslint/rules/deprecation) | Adds the context of the deprecated identifier to the message.<br /><sub>**Original message:**<br />which is deprecated.<br />**New message:**<br />KeyboardEvent.which is deprecated.</sub>
+| ___import-name                   | tslint-microsoft-contrib &raquo; [import-name](https://github.com/Microsoft/tslint-microsoft-contrib#user-content-supported-rules) | Adds the full import path to the message.<br /><sub>**Original message:**<br />Misnamed import. Import should be named 'xyz' but found 'zyx'<br />**New message:**<br />Misnamed import. Import should be named 'xyz' but found 'zyx' for './my-modules/xyz'</sub>
+| ___interface-name                | tslint &raquo; [interface-name](https://palantir.github.io/tslint/rules/interface-name) | Adds the criticized interface name to the message.<br /><sub>**Original message:**><br />Interface name must not have an "I" prefix<br />**New message:**<br />Interface name "I18N" must not have an "I" prefix</sub>
+| ___match-default-export-name     | tslint &raquo; [match-default-export-name](https://palantir.github.io/tslint/rules/match-default-export-name) | Adds the full import path to the message.<br /><sub>**Original message:**<br />Expected import 'xyz' to match the default export 'zyx'.<br />**New message:**<br />Expected import 'xyz' of module './my-modules/xyz' to match the default export 'zyx'.</sub>
+| ___member-access                 | tslint &raquo; [member-access](https://palantir.github.io/tslint/rules/member-access) | Nothing special. Just enables the ability to filter specific linting errors in the `tslint.json`.
+| ___object-literal-sort-keys      | tslint &raquo; [object-literal-sort-keys](https://palantir.github.io/tslint/rules/object-literal-sort-keys) | Nothing special. Just enables the ability to filter specific linting errors in the `tslint.json`.
+| ___prefer-conditional-expression | tslint &raquo; [prefer-conditional-expression](https://palantir.github.io/tslint/rules/prefer-conditional-expression) | Adds an estimation of the saved characters, and the new size to the message.<br /><sub>**Original message:**<br />Use a conditional expression instead of assigning to 'myVar' in multiple places.<br />**New message:**<br />Use a conditional expression instead of assigning to 'myVar' in multiple places. (save about 36 characters, conditional expression size would be about 29 characters)</sub>
+| ___strict-boolean-expressions    | tslint &raquo; [strict-boolean-expressions](https://palantir.github.io/tslint/rules/strict-boolean-expressions) | Adds an context of the expression to the message.<br /><sub>**Original message:**<br />This type is not allowed in the operand for the '&&' operator because it is always truthy. It may be null/undefined, but neither 'allow-null-union' nor 'allow-undefined-union' is set. Allowed types are boolean, enum, or boolean-or-undefined.<br />**New message:**<br />This type is not allowed in the operand for the '&&' operator in JsxExpression because it is always truthy. It may be null/undefined, but neither 'allow-null-union' nor 'allow-undefined-union' is set. Allowed types are boolean, enum, or boolean-or-undefined.</sub>
+| ___typedef                       | tslint &raquo; [typedef](https://palantir.github.io/tslint/rules/typedef) | Nothing special. Just enables the ability to filter specific linting errors in the `tslint.json`.
+
+The configuration is equally to the original rule, expect that the last parameter takes an array of regular expression. Like:
+```
+"___prefer-conditional-expression": [true, "check-else-if", [
+  "conditional expression size would be about [120...]"
+]],
+```
+(see the topic [ranges in regular expressions](#ranges-in-regular-expressions) to read about the above regexp)
+
+## Disable/enable rules by their original name in comment flags in source code
+
+TSLint allows you to enable or disable specific rules by their name directly in the source code, like
+```javascript
+// tslint:disable-next-line:rule-name
+```
+Normally, the `rule-name` is the name of the rule you use in your `tslint.json`. That would mean, if you change `interface-name` to `___interface-name`, you would also need to update all comments which are using this rule name.
+
+To avoid that, TSLint-Filter pretend to have the name of the original rule, so you don't need to change anything.
+
+## Custom rule wrappers
+
+### Basic Usage
+
+First, create a folder for custom rules in your project folder.
 
 In this folder create a JavaScript file like this:
 ```javascript
@@ -100,7 +155,7 @@ The last parameter **must** be always an array with regular expressions. Linting
 ]],
 ```
 
-## Extended Usage
+### Extended Usage
 
 Beside simply ignoring linting errors, you can also manipulate them. You can change the message, implement a fix or whatever you like.
 
@@ -139,7 +194,7 @@ module.exports = require('tslint-filter')('tslint/lib/rules/...', {
 });
 ```
 
-### Example #1
+#### Example #1
 
 For example, we want to extend the "interface-name" rule, to allow the interface name "I18N", even if it starts with "I".<br />
 Unfortunately, the message of this rule does not provide the name of the interface, so first, we have to include the name into the message:
@@ -172,7 +227,7 @@ Now you can ignore interface names, starting with "I" followed by a digit:
 ]],
 ```
 
-### Example #2
+#### Example #2
 
 For example the "prefer-conditional-expression" rule could be extended to show the approximated number of characters you could save, and also the approximated size if you write the statement as conditional expression:
 
@@ -222,6 +277,8 @@ Now you can use this pattern, to prevent linting errors, where the conditional e
 ]],
 ```
 
+### Ranges in regular expressions
+
 Ranges can be specified with:
 
 | RegExp character sets | Meaning
@@ -234,34 +291,7 @@ Ranges can be specified with:
 `-999999999999999` and `999999999999999` are required, because the expression is converted into a valid RegExp, and here we always need to specify a range.<br />
 These numbers are chosen because they are very near to Number.MIN_SAFE_INTEGER and Number.MAX_SAFE_INTEGER, but the RegExp representation is still very short.
 
-## Predefined rule wrappers
-
-The TSLint-Filter package contains a couple of predefined rule wrappers, which I'm using in my projects.
-You can simply include them in your projects by adding `"extends": ["tslint-filter"]` to your `tslint.json`, or by adding `"node_modules/tslint-filter/rules"` to the `"rulesDirectory"` section.
-
-| Rule Name | Original Rule Package | Description
-|---|---|---
-| ___deprecation                   | tslint                   | Adds the context of the deprecated identifier to the message.<br /><sub>**Original message:**<br />which is deprecated.<br />**New message:**<br />KeyboardEvent.which is deprecated.</sub>
-| ___import-name                   | tslint-microsoft-contrib | Adds the full import path to the message.<br /><sub>**Original message:**<br />Misnamed import. Import should be named 'xyz' but found 'zyx'<br />**New message:**<br />Misnamed import. Import should be named 'xyz' but found 'zyx' for './my-modules/xyz'</sub>
-| ___interface-name                | tslint                   | Adds the criticized interface name to the message.<br /><sub>**Original message:**><br />Interface name must not have an "I" prefix<br />**New message:**<br />Interface name "I18N" must not have an "I" prefix</sub>
-| ___match-default-export-name     | tslint                   | Adds the full import path to the message.<br /><sub>**Original message:**<br />Expected import 'xyz' to match the default export 'zyx'.<br />**New message:**<br />Expected import 'xyz' of module './my-modules/xyz' to match the default export 'zyx'.</sub>
-| ___member-access                 | tslint                   | Nothing special. Just enables the ability to filter specific linting errors in the `tslint.json`.
-| ___object-literal-sort-keys      | tslint                   | Nothing special. Just enables the ability to filter specific linting errors in the `tslint.json`.
-| ___prefer-conditional-expression | tslint                   | Adds an estimation of the saved characters, and the new size to the message.<br /><sub>**Original message:**<br />Use a conditional expression instead of assigning to 'myVar' in multiple places.<br />**New message:**<br />Use a conditional expression instead of assigning to 'myVar' in multiple places. (save about 36 characters, conditional expression size would be about 29 characters)</sub>
-| ___strict-boolean-expressions    | tslint                   | Adds an context of the expression to the message.<br /><sub>**Original message:**<br />This type is not allowed in the operand for the '&&' operator because it is always truthy. It may be null/undefined, but neither 'allow-null-union' nor 'allow-undefined-union' is set. Allowed types are boolean, enum, or boolean-or-undefined.<br />**New message:**<br />This type is not allowed in the operand for the '&&' operator in JsxExpression because it is always truthy. It may be null/undefined, but neither 'allow-null-union' nor 'allow-undefined-union' is set. Allowed types are boolean, enum, or boolean-or-undefined.</sub>
-| ___typedef                       | tslint                   | Nothing special. Just enables the ability to filter specific linting errors in the `tslint.json`.
-
-## Disable/enable rules by their original name in comment flags in source code
-
-TSLint allows you to enable or disable specific rules by their name directly in the source code, like
-```javascript
-// tslint:disable-next-line:rule-name
-```
-Normally, the `rule-name` is the name of the rule you use in your `tslint.json`. That would mean, if you change `interface-name` to `___interface-name`, you would also need to update all comments which are using this rule name.
-
-To avoid that, TSLint-Filter pretend to have the name of the original rule, so you don't need to change anything.
-
-## Location of Rule Directories
+### Location of Rule Directories
 
 > It's an open to-do to determine the directory and rule file name automatically, based on the `rulesDirectory`, but I haven't found an easy way to do that yet.
 
@@ -292,7 +322,7 @@ So, for now, it's required to specify the whole path to the rule, instead of jus
 
 \* as of 2019-02-14. List ordered by number of rules.
 
-## Rule File Names
+### Rule File Names
 
 Dashes in the file names are converted to camel-case, but leading and trailing dashes are kept. "Rule" is appended.
 
