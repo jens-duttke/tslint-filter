@@ -31,6 +31,50 @@ const b: Readonly<A> = {
 
 console.log(a, b);
 
+const event: KeyboardEvent = {} as KeyboardEvent;
+
+console.log(event.which);
+                  ~~~~~ [KeyboardEvent.which is deprecated.]
+
+delete document.createElement;
+                ~~~~~~~~~~~~~ [Document.createElement is deprecated.]
+
+/** @deprecated */
+type DeprecatedType = number;
+
+const dep: DeprecatedType = 5;
+           ~~~~~~~~~~~~~~ [DeprecatedType is deprecated.]
+
+interface B {
+	c: C
+}
+
+interface C {
+	/** @deprecated */
+	d1: string;
+}
+
+interface BB {
+	c: {
+		/** @deprecated */
+		d2: string;
+	}
+	cc: {} & {
+		/** @deprecated */
+		d3: string;
+	}
+}
+const deprecatedValue1: B = {} as B;
+const deprecatedValue2: BB = {} as BB;
+
+deprecatedValue1.c.d1;
+                   ~~ [C.d1 is deprecated.]
+deprecatedValue2.c.d2;
+                   ~~ [BB.c.d2 is deprecated.]
+
+deprecatedValue2.cc.d3;
+                    ~~ [BB.cc.d3 is deprecated.]
+
 class Test {
 	private readonly a;
 
@@ -58,7 +102,7 @@ class Test {
 			longText = 'Some long text to get an expression which is longer than 120 characters, so that it doesn\'t fit into one line.';
 		}
 		else {
-			longText = 'This expresson should not be converted into an conditional expression one-liner.';
+			longText = 'This expression should not be converted into an conditional expression one-liner.';
 		}
 	}
 
