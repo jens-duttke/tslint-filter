@@ -1,11 +1,15 @@
 const utils = require('tsutils');
 
 module.exports = require('../dist')('tslint/lib/rules/preferConditionalExpressionRule', {
-	modifyFailure (failure) {
+	/**
+	 * @param {import('tslint').RuleFailure} [failure]
+	 * @param {import('typescript').SourceFile} [sourceFile]
+	 */
+	modifyFailure (failure, sourceFile) {
 		const match = failure.getFailure().match(/'([^\0]+)'/);
 
 		if (match !== null) {
-			const node = utils.getTokenAtPosition(failure.sourceFile, failure.getStartPosition().getPosition()).parent;
+			const node = utils.getTokenAtPosition(sourceFile, failure.getStartPosition().getPosition()).parent;
 
 			if (utils.isIfStatement(node)) {
 				const originalSize = (node.end - node.pos);
@@ -23,7 +27,7 @@ module.exports = require('../dist')('tslint/lib/rules/preferConditionalExpressio
 					return;
 				}
 
-				failure.failure = `${failure.failure} (save about ${originalSize - newLength} characters, conditional expression size would be about ${newLength} characters)`;
+				return `${failure.getFailure()} (save about ${originalSize - newLength} characters, conditional expression size would be about ${newLength} characters)`;
 			}
 		}
 

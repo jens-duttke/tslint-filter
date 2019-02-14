@@ -1,11 +1,13 @@
 const utils = require('tsutils');
 
 module.exports = require('../dist')('tslint/lib/rules/interfaceNameRule', {
-	modifyFailure (failure) {
-		const node = utils.getTokenAtPosition(failure.sourceFile, failure.getStartPosition().getPosition());
+	/**
+	 * @param {import('tslint').RuleFailure} [failure]
+	 * @param {import('typescript').SourceFile} [sourceFile]
+	 */
+	modifyFailure (failure, sourceFile) {
+		const node = utils.getTokenAtPosition(sourceFile, failure.getStartPosition().getPosition());
 
-		failure.failure = `Interface name "${node.getText()}" must not have an "I" prefix`;
-
-		return failure;
+		return `Interface name "${node.getText()}" must not have an "I" prefix`;
 	}
 });

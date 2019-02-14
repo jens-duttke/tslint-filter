@@ -1,12 +1,16 @@
 const utils = require('tsutils');
 
 module.exports = require('../dist')('tslint-microsoft-contrib/importNameRule', {
-	modifyFailure (failure) {
-		if (/^Misnamed import\./.test(failure.failure)) {
-			const node = utils.getTokenAtPosition(failure.sourceFile, failure.getStartPosition().getPosition());
+	/**
+	 * @param {import('tslint').RuleFailure} [failure]
+	 * @param {import('typescript').SourceFile} [sourceFile]
+	 */
+	modifyFailure (failure, sourceFile) {
+		if (/^Misnamed import\./.test(failure.getFailure())) {
+			const node = utils.getTokenAtPosition(sourceFile, failure.getStartPosition().getPosition());
 
 			if (utils.isImportDeclaration(node.parent) && utils.isLiteralExpression(node.parent.moduleSpecifier)) {
-				failure.failure += ` for '${node.parent.moduleSpecifier.text}'`;
+				return `${failure.getFailure()} for '${node.parent.moduleSpecifier.text}'`;
 			}
 		}
 
