@@ -108,9 +108,13 @@ function applyWithFilter (linter: Linter, originalApplyMethod: RuleApplyAny, rul
 		}
 
 		if (typeof options.modifyFailure === 'function') {
-			const modifyFailure: (failure: Lint.RuleFailure, program: ts.Program | undefined) => Lint.RuleFailure | undefined = options.modifyFailure.bind(this);
+			const modifyFailure: (
+				failure: Lint.RuleFailure,
+				sourceFile: ts.SourceFile,
+				program: ts.Program | undefined
+			) => Lint.RuleFailure | undefined = options.modifyFailure.bind(this);
 
-			failures = failures.map((failure) => modifyFailure(failure, program)).filter(isFailure);
+			failures = failures.map((failure) => modifyFailure(failure, sourceFile, program)).filter(isFailure);
 		}
 
 		if (ignorePatterns === undefined) {
