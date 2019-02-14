@@ -1,6 +1,6 @@
 {
 	"name": "tslint-filter",
-	"version": "1.10.0",
+	"version": "1.10.1",
 	"description": "Suppress and extend TSLint linting errors, before they get returned to the console or your code editor",
 	"author": "Jens Duttke <github@duttke.de>",
 	"keywords": [
