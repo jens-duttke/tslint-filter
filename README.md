@@ -44,11 +44,11 @@ It's even possible to use integer ranges in these regular expression, to filter 
 
 ### Handle JavaScript errors in rules
 
-At this time (2019-01-17), the [tslint-microsoft-contrib](https://www.npmjs.com/package/tslint-microsoft-contrib) rule "import-name" throws an error for empty imports (imports of modules for side efffects only) like
+At this time (2019-01-17), the [tslint-microsoft-contrib](https://www.npmjs.com/package/tslint-microsoft-contrib) rule "import-name" throws an error for empty imports (imports of modules for side effects only) like
 ```javascript
 import './polyfill'
 ```
-While TSLint doesn't handle such JavaScript errors, your code editor may suppress this error silently and may stop linting your whole project or atleast the current file, so that you think your files are free of issues, because your editor doesn't show any.
+While TSLint doesn't handle such JavaScript errors, your code editor may suppress this error silently and may stop linting your whole project or at least the current file, so that you think your files are free of issues, because your editor doesn't show any.
 
 TSLint-Filter catches such JavaScript errors and show them as normal linter errors for the first character of a file, so that you get visual feedback, that there's something wrong.
 
@@ -180,7 +180,7 @@ Ranges can be specified with:
 | `[...]`    | Any integer number from -999999999999999 to 999999999999999,<br />but if possible you should prefer `-?\d+`
 
 `-999999999999999` and `999999999999999` are required, because the expression is converted into a valid RegExp, and here we always need to specify a range.<br />
-These numbers are choosen because they are very near to Number.MIN_SAFE_INTEGER and Number.MAX_SAFE_INTEGER, but the RegExp representation is still very short.
+These numbers are chosen because they are very near to Number.MIN_SAFE_INTEGER and Number.MAX_SAFE_INTEGER, but the RegExp representation is still very short.
 
 ## Predefined rule wrappers
 
@@ -211,7 +211,7 @@ To avoid that, TSLint-Filter pretend to have the name of the original rule, so y
 
 ## Location of Rule Directories
 
-> It's an open to-do to determine the directory and rule file name automatically, based on the `rulesDirectory`, but I havn't found an easy way to do that yet.
+> It's an open to-do to determine the directory and rule file name automatically, based on the `rulesDirectory`, but I haven't found an easy way to do that yet.
 
 So, for now, it's required to specify the whole path to the rule, instead of just using the rule name.
 
@@ -242,6 +242,6 @@ So, for now, it's required to specify the whole path to the rule, instead of jus
 
 ## Rule File Names
 
-Dashes in the file names are converted to camel-case, but leading and trailing dashes are keeped. "Rule" is appended.
+Dashes in the file names are converted to camel-case, but leading and trailing dashes are kept. "Rule" is appended.
 
 So, the rule name `-ab-cd-ef-` is located in the file `-abCdEf-Rule`.
