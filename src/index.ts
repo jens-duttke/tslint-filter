@@ -198,7 +198,7 @@ function updateFailure (sourceFile: ts.SourceFile, failure: Lint.RuleFailure, ne
 		);
 	}
 
-	return failure;
+	return newFailure;
 }
 
 function isFailure (failure: Lint.RuleFailure | undefined): failure is Lint.RuleFailure {
