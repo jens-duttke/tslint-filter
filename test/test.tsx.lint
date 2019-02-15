@@ -75,6 +75,20 @@ deprecatedValue2.c.d2;
 deprecatedValue2.cc.d3;
                     ~~ [BB.cc.d3 is deprecated.]
 
+console.log( 'Some Text');
+            ~nil [there should be no spaces inside this paren.]
+
+await import(/* webpackChunkName: "someModule" */ `./some-module`);
+             ~nil [there should be no spaces inside this paren.]
+
+await import(/* webpackChunkName: "someModule" */`./some-module`);
+
+import(
+	/* webpackChunkName: "my-chunk-name" */
+	/* webpackMode: "lazy" */
+	'module'
+);
+
 class Test {
 	private readonly a;
 

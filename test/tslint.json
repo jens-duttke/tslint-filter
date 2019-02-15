@@ -1,15 +1,16 @@
 {
-	"extends": ["../dist/index.js"],
+	"extends": [
+		"../dist/index.js",
+		"tslint-eslint-rules"
+	],
 	"rulesDirectory": [
 		".",
 		"tslint-microsoft-contrib"
 	],
 	"rules": {
-		"___does-not-exist": [true, [
-		]],
+		"___does-not-exist": [true, []],
 
-		"___deprecation": [true, [
-		]],
+		"___deprecation": [true, []],
 		"___import-name": [true, [
 			"'someModule' .+ 'SomeModule'"
 		]],
@@ -29,6 +30,7 @@
 		"___prefer-conditional-expression": [true, "check-else-if", [
 			"conditional expression size would be about [120...]"
 		]],
+		"___space-in-parens": [true, "never", []],
 		"___strict-boolean-expressions": [true, "allow-boolean-or-undefined", "allow-enum", [
 			"'\\|\\|'",
 			"operator in JsxExpression"
