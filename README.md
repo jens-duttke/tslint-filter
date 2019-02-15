@@ -321,7 +321,7 @@ So, for now, it's required to specify the whole path to the rule, instead of jus
 | [tslint-origin-ordered-imports-rule](https://www.npmjs.com/package/tslint-origin-ordered-imports-rule) | tslint-origin-ordered-imports-rule/dist/ | 1
 | [tslint-plugin-prettier](https://www.npmjs.com/package/tslint-plugin-prettier)                         | tslint-plugin-prettier/rules/            | 1
 
-\* as of 2019-02-14. List ordered by number of rules.
+\* as of 2019-02-15. List ordered by number of rules.
 
 ### Rule File Names
 
