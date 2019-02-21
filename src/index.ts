@@ -87,7 +87,6 @@ function applyWithFilter (linter: Linter, originalApplyMethod: RuleApplyAny, rul
 
 	return function (this: AbstractRule, sourceFile: ts.SourceFile, program?: ts.Program): Lint.RuleFailure[] {
 		const ignorePatterns: RegExp[] | undefined = extractIgnorePatterns(this);
-		const filterRuleName: string = this.ruleName;
 
 		// @ts-ignore
 		(this.options as object).ruleName = ruleName;
