@@ -117,10 +117,7 @@ function applyWithFilter (linter: Linter, originalApplyMethod: RuleApplyAny, rul
 			failures = failures.map((failure) => updateFailure(sourceFile, failure, modifyFailure(failure, sourceFile, program))).filter(isFailure);
 		}
 
-		if (ignorePatterns === undefined) {
-			failures.push(new Lint.RuleFailure(sourceFile, 0, 1, `No filter configuration given for rule '${filterRuleName}'`, this.ruleName));
-		}
-		else {
+		if (ignorePatterns !== undefined) {
 			failures = failures.filter((failure) => !ignorePatterns.some((regex) => regex.test(failure.getFailure())));
 		}
 
