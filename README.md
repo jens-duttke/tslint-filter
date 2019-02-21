@@ -42,7 +42,7 @@ Unfortunately, by now, it's not possible to specify a whitelist here.
 I want to prefer conditional expressions for small, simple alignments, but "prefer-conditional-expression" also complains about complex statements, which wouldn't be easy readable in a single line, because this line would have a size of 300 characters or more.<br />
 Why isn't there a way to show the linting error only, if the conditional expression would be a ...let's say... less-than-120-chars-one-liner?
 
-Using TSLint-Filter, you have to possibility to easily extend existing rules and suppress specific linting errors, based on regular expressions.
+Using TSLint-Filter, you have the possibility to easily extend existing rules and suppress specific linting errors, based on regular expressions.
 
 It's even possible to use integer [ranges in these regular expression](#ranges-in-regular-expressions), to filter by a range of numbers in the error message.
 
@@ -78,7 +78,7 @@ Either use one of the [predefined rule wrappers](#predefined-rule-wrappers), or 
 
 The TSLint-Filter package contains a couple of predefined rule wrappers, which I'm using in my projects.
 
-In your `tslint.json` add either:
+In your `tslint.json` either add:
 ```
 "extends": [
   "tslint-filter"
@@ -103,7 +103,7 @@ Now, you can replace the original rule, by one of the following predefined rule 
 | ___object-literal-sort-keys      | tslint &raquo; [object-literal-sort-keys](https://palantir.github.io/tslint/rules/object-literal-sort-keys) | Nothing special. Just enables the ability to filter specific linting errors in the `tslint.json`.
 | ___prefer-conditional-expression | tslint &raquo; [prefer-conditional-expression](https://palantir.github.io/tslint/rules/prefer-conditional-expression) | Adds an estimation of the saved characters, and the new size to the message.<br /><sub>**Original message:**<br />Use a conditional expression instead of assigning to 'myVar' in multiple places.<br />**New message:**<br />Use a conditional expression instead of assigning to 'myVar' in multiple places. (save about 36 characters, conditional expression size would be about 29 characters)</sub>
 | ___space-in-parens               | tslint-eslint-rules &raquo; [space-in-parens](https://github.com/buzinas/tslint-eslint-rules/blob/master/src/docs/rules/spaceInParensRule.md) | Allow block comments inside of parentheses, like:<br />```import(/* webpackChunkName: "my-chunk-name" */'module');```
-| ___strict-boolean-expressions    | tslint &raquo; [strict-boolean-expressions](https://palantir.github.io/tslint/rules/strict-boolean-expressions) | Adds an context of the expression to the message.<br /><sub>**Original message:**<br />This type is not allowed in the operand for the '&&' operator because it is always truthy. It may be null/undefined, but neither 'allow-null-union' nor 'allow-undefined-union' is set. Allowed types are boolean, enum, or boolean-or-undefined.<br />**New message:**<br />This type is not allowed in the operand for the '&&' operator in JsxExpression because it is always truthy. It may be null/undefined, but neither 'allow-null-union' nor 'allow-undefined-union' is set. Allowed types are boolean, enum, or boolean-or-undefined.</sub>
+| ___strict-boolean-expressions    | tslint &raquo; [strict-boolean-expressions](https://palantir.github.io/tslint/rules/strict-boolean-expressions) | Adds the context of the expression to the message.<br /><sub>**Original message:**<br />This type is not allowed in the operand for the '&&' operator because it is always truthy. It may be null/undefined, but neither 'allow-null-union' nor 'allow-undefined-union' is set. Allowed types are boolean, enum, or boolean-or-undefined.<br />**New message:**<br />This type is not allowed in the operand for the '&&' operator in JsxExpression because it is always truthy. It may be null/undefined, but neither 'allow-null-union' nor 'allow-undefined-union' is set. Allowed types are boolean, enum, or boolean-or-undefined.</sub>
 | ___typedef                       | tslint &raquo; [typedef](https://palantir.github.io/tslint/rules/typedef) | Nothing special. Just enables the ability to filter specific linting errors in the `tslint.json`.
 
 The configuration is equally to the original rule, expect that the last parameter takes an array of regular expression. Like:
