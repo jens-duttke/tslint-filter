@@ -10,7 +10,7 @@
 	"rules": {
 		"___does-not-exist": [true, []],
 
-		"___deprecation": [true, []],
+		"___deprecation": [true, ["^*"]],
 		"___import-name": [true, [
 			"'someModule' .+ 'SomeModule'"
 		]],

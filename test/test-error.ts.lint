@@ -1,5 +1,6 @@
 import SomeModule from './some-module';
 ~ [Error in 'tslint/lib/rules/doesNotExistRule': Cannot find module 'tslint/lib/rules/doesNotExistRule'. Rule is disabled for this file]
+~ [TSLint-Filter ignore pattern: Invalid regular expression: /^*/: Nothing to repeat]
 ~ [TypeError in 'tslint-microsoft-contrib/importNameRule': Cannot read property 'name' of undefined. Rule is disabled for this file]
 import AnotherModule from './some-module';
        ~~~~~~~~~~~~~ [Expected import 'AnotherModule' of module './some-module' to match the default export 'someModule'.]

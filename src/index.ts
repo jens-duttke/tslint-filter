@@ -86,11 +86,11 @@ function applyWithFilter (linter: Linter, originalApplyMethod: RuleApplyAny, rul
 	const ruleName: string = linter.Rule.metadata.ruleName;
 
 	return function (this: AbstractRule, sourceFile: ts.SourceFile, program?: ts.Program): Lint.RuleFailure[] {
-		const ignorePatterns: RegExp[] | undefined = extractIgnorePatterns(this);
-
 		// @ts-ignore
 		(this.options as object).ruleName = ruleName;
 		this.ruleName = ruleName;
+
+		const ignorePatternsOrFailure: RegExp[] | undefined | Lint.RuleFailure = extractIgnorePatterns(this, sourceFile);
 
 		let failures: Lint.RuleFailure[];
 
@@ -116,8 +116,11 @@ function applyWithFilter (linter: Linter, originalApplyMethod: RuleApplyAny, rul
 			failures = failures.map((failure) => updateFailure(sourceFile, failure, modifyFailure(failure, sourceFile, program))).filter(isFailure);
 		}
 
-		if (ignorePatterns !== undefined) {
-			failures = failures.filter((failure) => !ignorePatterns.some((regex) => regex.test(failure.getFailure())));
+		if (ignorePatternsOrFailure instanceof Lint.RuleFailure) {
+			failures.push(ignorePatternsOrFailure);
+		}
+		else if (ignorePatternsOrFailure !== undefined) {
+			failures = failures.filter((failure) => !ignorePatternsOrFailure.some((regex) => regex.test(failure.getFailure())));
 		}
 
 		return failures;
@@ -128,7 +131,7 @@ function getRuleNameByFileName (ruleFile: string): string {
 	return ruleFile.replace(/^.*\/|Rule\.?.*$/g, '').replace(/([A-Z])/g, '-$1').toLowerCase();
 }
 
-function extractIgnorePatterns (rule: Lint.Rules.AbstractRule): RegExp[] | undefined {
+function extractIgnorePatterns (rule: Lint.Rules.AbstractRule, sourceFile: ts.SourceFile): RegExp[] | undefined | Lint.RuleFailure {
 	const ruleArguments: any[] = rule.getOptions().ruleArguments;
 	const lastRuleArgument: any = ruleArguments[ruleArguments.length - 1];
 
@@ -136,7 +139,18 @@ function extractIgnorePatterns (rule: Lint.Rules.AbstractRule): RegExp[] | undef
 		return undefined;
 	}
 
-	const ignorePatterns: RegExp[] = lastRuleArgument.map(stringToRegExp);
+	let ignorePatterns: RegExp[];
+
+	try {
+		ignorePatterns = lastRuleArgument.map(stringToRegExp);
+	}
+	catch (error) {
+		if (error instanceof Error) {
+			return new Lint.RuleFailure(sourceFile, 0, 1, `TSLint-Filter ignore pattern: ${error.message}`, rule.ruleName);
+		}
+
+		return undefined;
+	}
 
 	// @ts-ignore
 	rule.ruleArguments = ruleArguments.slice(0, -1);
