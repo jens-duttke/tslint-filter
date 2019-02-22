@@ -26,7 +26,7 @@
 		"publish:major": "npm version major",
 		"publish:minor": "npm version minor",
 		"publish:patch": "npm version patch",
-		"preversion": "npm run lint && npm run build && npm run test && assert-outdated-npm-modules --max-warnings 1",
+		"preversion": "npm run lint && npm run build && npm run test && assert-outdated-npm-modules --max-warnings 0",
 		"postversion": "git push && git push --tags && npm publish",
 		"build": "rimraf dist && tsc",
 		"lint": "tslint --project tsconfig.json --format verbose",
