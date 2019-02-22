@@ -106,13 +106,15 @@ Now, you can replace the original rule, by one of the following predefined rule 
 | ___strict-boolean-expressions    | tslint &raquo; [strict-boolean-expressions](https://palantir.github.io/tslint/rules/strict-boolean-expressions) | Adds the context of the expression to the message.<br /><sub>**Original message:**<br />This type is not allowed in the operand for the '&&' operator because it is always truthy. It may be null/undefined, but neither 'allow-null-union' nor 'allow-undefined-union' is set. Allowed types are boolean, enum, or boolean-or-undefined.<br />**New message:**<br />This type is not allowed in the operand for the '&&' operator in JsxExpression because it is always truthy. It may be null/undefined, but neither 'allow-null-union' nor 'allow-undefined-union' is set. Allowed types are boolean, enum, or boolean-or-undefined.</sub>
 | ___typedef                       | tslint &raquo; [typedef](https://palantir.github.io/tslint/rules/typedef) | Nothing special. Just enables the ability to filter specific linting errors in the `tslint.json`.
 
-The configuration is equally to the original rule, expect that the last parameter takes an array of regular expression. Like:
+The configuration is equally to the original rule, expect that the last argument takes an array of regular expression. Like:
 ```
 "___prefer-conditional-expression": [true, "check-else-if", [
   "conditional expression size would be about [120...]"
 ]],
 ```
 (see the topic [ranges in regular expressions](#ranges-in-regular-expressions) to read about the above regexp)
+
+> Even if you just use TSLint-Filter to modify the linting error message, you need to add an empty array, if the last argument of the rule is already an array. Otherwise, TSLint-Filter will misinterpret the rule argument as array of RegExp pattern to ignore.
 
 ## Disable/enable rules by their original name in comment flags in source code
 
@@ -147,8 +149,9 @@ In your `tslint.json` add the folder to the "rulesDirectory" section:
   "rules": {
 ```
 
-Now, instead of using the rule "member-access", I'm able to use the rule "___member-access".<br />
-The last parameter **must** be always an array with regular expressions. Linting errors which match these expressions will be ignored.
+Now, instead of using the rule "member-access", you're able to use the rule "___member-access".<br />
+
+If the last argument is an array it will be interpreted as an array of regular expressions. Linting errors which match these expressions will be ignored.
 
 ```json
 "___member-access": [true, [
