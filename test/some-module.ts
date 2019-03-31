@@ -1,3 +1,3 @@
-declare const someModule = true;
+declare const someModule: boolean;
 
 export default someModule;
