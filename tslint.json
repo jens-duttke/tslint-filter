@@ -61,6 +61,7 @@
 		"no-invalid-this": [true, "check-function-in-method"],
 		"no-misused-new": true,
 		"no-null-keyword": false,
+		"no-null-undefined-union": true,
 		"no-object-literal-type-assertion": true,
 		"no-restricted-globals": true,
 		"no-return-await": true,
