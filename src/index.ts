@@ -174,7 +174,12 @@ function getFailureByError (error: any, ruleFile: string, originalRuleName: stri
 
 	if (error instanceof Error) {
 		title = error.name;
-		message = error.message;
+
+		/**
+		 * Only show the first line of the message, to suppress the stack trace,
+		 * attached to the error message in Node.js 12 (https://github.com/nodejs/node/pull/25690)
+		 */
+		message = error.message.replace(/\n.+/g, '');
 	}
 	else if (typeof error === 'string') {
 		title = 'Error';
