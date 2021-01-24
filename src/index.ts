@@ -113,14 +113,20 @@ function applyWithFilter (linter: Linter, originalApplyMethod: RuleApplyAny, rul
 				program: ts.Program | undefined
 			) => Lint.RuleFailure | string | undefined = options.modifyFailure.bind(this);
 
-			failures = failures.map((failure) => updateFailure(sourceFile, failure, modifyFailure(failure, sourceFile, program))).filter(isFailure);
+			failures = failures
+				.map((failure: Lint.RuleFailure): Lint.RuleFailure | undefined => updateFailure(sourceFile, failure, modifyFailure(failure, sourceFile, program)))
+				.filter(isFailure);
 		}
 
 		if (ignorePatternsOrFailure instanceof Lint.RuleFailure) {
 			failures.push(ignorePatternsOrFailure);
 		}
 		else if (ignorePatternsOrFailure !== undefined) {
-			failures = failures.filter((failure) => !ignorePatternsOrFailure.some((regex) => regex.test(failure.getFailure())));
+			failures = failures.filter((failure: Lint.RuleFailure): boolean => (
+				!ignorePatternsOrFailure.some(
+					(regex: RegExp): boolean => regex.test(failure.getFailure())
+				)
+			));
 		}
 
 		return failures;
@@ -162,7 +168,7 @@ function extractIgnorePatterns (rule: Lint.Rules.AbstractRule, sourceFile: ts.So
 
 function stringToRegExp (str: string): RegExp {
 	return new RegExp(
-		str.replace(/\[(\d*)\.\.\.(\d*)\]/g, (_match: string, p1: string, p2: string) =>
+		str.replace(/\[(\d*)\.\.\.(\d*)\]/g, (_match: string, p1: string, p2: string): string =>
 			toRegexRange(p1 !== '' ? p1 : -999999999999999, p2 !== '' ? p2 : 999999999999999, { shorthand: true })
 		)
 	);
@@ -183,10 +189,12 @@ function getFailureByError (error: any, ruleFile: string, originalRuleName: stri
 	}
 	else if (typeof error === 'string') {
 		title = 'Error';
+
 		message = error;
 	}
 	else {
 		title = 'Unhandled error';
+
 		if (
 			error !== null &&
 			error !== undefined
