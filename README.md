@@ -1,5 +1,4 @@
 [![npm version](https://badge.fury.io/js/tslint-filter.svg)](https://badge.fury.io/js/tslint-filter)
-[![Dependency Status](https://img.shields.io/david/jens-duttke/tslint-filter.svg)](https://www.npmjs.com/package/tslint-filter)
 [![Known Vulnerabilities](https://snyk.io/test/github/jens-duttke/tslint-filter/badge.svg?targetFile=package.json)](https://snyk.io/test/github/jens-duttke/tslint-filter?targetFile=package.json)
 [![npm](https://img.shields.io/npm/dm/tslint-filter.svg?maxAge=2592000)](https://www.npmjs.com/package/tslint-filter)
 [![MIT license](https://img.shields.io/github/license/jens-duttke/tslint-filter.svg?style=flat)](https://opensource.org/licenses/MIT)
